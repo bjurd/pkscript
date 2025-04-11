@@ -7,6 +7,8 @@ end
 include("globals.lua")
 include("hooks.lua")
 
+include("movement.lua")
+
 function pkscript.Unload()
 	pkscript.Hooks.UnRegisterAll()
 end
