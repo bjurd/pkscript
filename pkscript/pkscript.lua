@@ -12,3 +12,5 @@ include("movement.lua")
 function pkscript.Unload()
 	pkscript.Hooks.UnRegisterAll()
 end
+
+concommand.Add("pkscript_unload", pkscript.Unload)
