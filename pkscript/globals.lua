@@ -1,0 +1,1 @@
+pkscript.LocalPlayer = LocalPlayer()
