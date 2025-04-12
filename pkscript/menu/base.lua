@@ -39,4 +39,4 @@ function PANEL:OnChildAdded(Child)
 	end)
 end
 
-vgui.Register("pkscript_Base", PANEL, "DPanel")
+vgui.Register("pkscript_Base", PANEL, "EditablePanel")
