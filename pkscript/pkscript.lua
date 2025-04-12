@@ -4,14 +4,14 @@ else
 	pkscript = pkscript or {}
 end
 
-include("globals.lua")
-include("util.lua")
-include("hooks.lua")
+include("pkscript/globals.lua")
+include("pkscript/util.lua")
+include("pkscript/hooks.lua")
 
-include("movement.lua")
+include("pkscript/movement.lua")
 
-include("menu.lua")
-include("menu/build.lua")
+include("pkscript/menu.lua")
+include("pkscript/menu/build.lua")
 
 function pkscript.Unload()
 	pkscript.Menu.Destroy()
@@ -32,5 +32,14 @@ function pkscript.FullUnload()
 	pkscript = nil
 end
 
+function pkscript.Reload()
+	-- A file can't include itself >:/
+	local Source = debug.getinfo(1).short_src
+	local Code = file.Read(Source, "GAME")
+
+	RunString(Code, Source)
+end
+
 concommand.Add("pkscript_unload", pkscript.Unload)
 concommand.Add("pkscript_fullunload", pkscript.FullUnload)
+concommand.Add("pkscript_reload", pkscript.Reload)

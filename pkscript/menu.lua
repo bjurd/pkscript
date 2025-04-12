@@ -3,9 +3,9 @@ local Menu = pkscript.Menu
 
 Menu.Font = "DebugOverlay" -- Default
 
-include("menu/base.lua")
-include("menu/frame.lua")
-include("menu/option.lua")
+include("pkscript/menu/base.lua")
+include("pkscript/menu/frame.lua")
+include("pkscript/menu/option.lua")
 
 function Menu.Destroy()
 	Menu.Close()
