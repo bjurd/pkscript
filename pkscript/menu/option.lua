@@ -10,7 +10,7 @@ AccessorFunc(PANEL, "m_pTopOption", "TopOption")
 AccessorFunc(PANEL, "m_bOpen", "Open", FORCE_BOOL)
 
 function PANEL:Init()
-	self:SetTall(32)
+	self:SetTall(ScreenScaleH(16))
 	self:DockMargin(-1, -1, -1, -1) -- Stop funky double borders
 
 	self:SetFont(pkscript.Menu.Font)
