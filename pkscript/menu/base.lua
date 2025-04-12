@@ -6,7 +6,7 @@ function PANEL:Init()
 	self:SetPaintBackgroundEnabled(false)
 	self:SetPaintBorderEnabled(false)
 
-	self:SetMouseInputEnabled(true)
+	self:SetMouseInputEnabled(false)
 	self:SetKeyboardInputEnabled(true)
 
 	self:SetAccentColor(Color(125, 0, 0, 255))
@@ -37,6 +37,14 @@ function PANEL:OnChildAdded(Child)
 			self:SetupChild(Child)
 		end
 	end)
+end
+
+function PANEL:OnMousePressed() -- TODO: For some reason this does nothing
+	return true
+end
+
+function PANEL:OnFocusChanged(Gained) -- TODO: For some reason this does nothing
+	self:SetMouseInputEnabled(false)
 end
 
 vgui.Register("pkscript_Base", PANEL, "EditablePanel")
