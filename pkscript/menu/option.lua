@@ -18,7 +18,7 @@ function PANEL:Init()
 	self:SetText("Option")
 
 	self:SetVarKey("")
-	self:SetVarType(TYPE_BOOL)
+	self:SetVarType(TYPE_NIL)
 
 	self:SetOpen(false)
 
@@ -65,8 +65,22 @@ function PANEL:PaintBackground(Width, Height)
 end
 
 function PANEL:PaintForeground(Width, Height)
+	local HasSubOptions = #self.m_pSubOptions > 0
+
 	surface.SetFont(self:GetFont())
 	surface.SetTextColor(self:GetTextColor())
+
+	if not HasSubOptions and self:GetVarType() == TYPE_BOOL then
+		local VarTable = self:GetVarTable()
+
+		if VarTable then
+			if VarTable[self:GetVarKey()] then
+				surface.SetTextColor(0, 255, 0, 255)
+			else
+				surface.SetTextColor(255, 0, 0, 255)
+			end
+		end
+	end
 
 	local Text = self:GetText()
 	local TextWidth, TextHeight = surface.GetTextSize(Text)
@@ -75,7 +89,7 @@ function PANEL:PaintForeground(Width, Height)
 	surface.DrawText(Text)
 
 	-- Use reference for performance sake
-	if #self.m_pSubOptions > 0 then
+	if HasSubOptions then
 		if self:GetOpen() then
 			Text = "<-"
 		else
@@ -137,6 +151,22 @@ function PANEL:FocusTop(Close)
 end
 
 function PANEL:OpenConfiguration()
+	-- TODO: Support things other than booleans and give them their own menu
+
+	if self:GetVarType() == TYPE_BOOL then
+		local VarTable = self:GetVarTable()
+
+		if istable(VarTable) then
+			local VarKey = self:GetVarKey()
+
+			VarTable[VarKey] = not VarTable[VarKey]
+		end
+	end
+
+	self:SetOpen(false) -- TODO: Side-effect of the temporary boolean-only thing
+end
+
+function PANEL:CloseConfiguration()
 	-- TODO:
 end
 
@@ -147,6 +177,7 @@ function PANEL:Open()
 
 	if #SubOptions < 1 then
 		self:OpenConfiguration()
+
 		return
 	end
 
@@ -162,7 +193,7 @@ function PANEL:Open()
 
 		SubOption:SetSize(Width, Height)
 		SubOption:SetPos(ScreenX, ScreenY)
-		SubOption:MoveToFront()
+		SubOption:MakePopup() -- Because MoveToFront doesn't work for some reason
 		SubOption:Show()
 
 		ScreenY = ScreenY + Height
@@ -177,8 +208,7 @@ function PANEL:Close()
 	local SubOptions = self:GetSubOptions()
 
 	if #SubOptions < 1 then
-		-- TODO: CloseConfiguration
-
+		self:CloseConfiguration()
 		self:FocusTop(true)
 
 		return
