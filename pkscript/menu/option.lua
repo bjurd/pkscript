@@ -7,6 +7,7 @@ AccessorFunc(PANEL, "m_pVarTable", "VarTable")
 AccessorFunc(PANEL, "m_strVarKey", "VarKey", FORCE_STRING)
 AccessorFunc(PANEL, "m_iVarType", "VarType", FORCE_NUMBER)
 AccessorFunc(PANEL, "m_pTopOption", "TopOption")
+AccessorFunc(PANEL, "m_bOpen", "Open", FORCE_BOOL)
 
 function PANEL:Init()
 	self:SetTall(32)
@@ -18,6 +19,8 @@ function PANEL:Init()
 
 	self:SetVarKey("")
 	self:SetVarType(TYPE_BOOL)
+
+	self:SetOpen(false)
 
 	self.m_pSubOptions = {}
 	self.m_pSubOptionKeys = {}
@@ -52,7 +55,7 @@ function PANEL:PaintBackground(Width, Height)
 	surface.SetDrawColor(0, 0, 0, 255)
 	surface.DrawOutlinedRect(0, 0, Width, Height)
 
-	if self:HasFocus() then
+	if self:HasFocus() or self:GetOpen() then
 		surface.SetDrawColor(self:GetAccentColor())
 	else
 		surface.SetDrawColor(24, 24, 24, 255)
@@ -70,6 +73,20 @@ function PANEL:PaintForeground(Width, Height)
 
 	surface.SetTextPos((Width * 0.5) - (TextWidth * 0.5), (Height * 0.5) - (TextHeight * 0.5))
 	surface.DrawText(Text)
+
+	-- Use reference for performance sake
+	if #self.m_pSubOptions > 0 then
+		if self:GetOpen() then
+			Text = "<-"
+		else
+			Text = "->"
+		end
+
+		TextWidth, TextHeight = surface.GetTextSize(Text)
+
+		surface.SetTextPos(Width - (TextWidth * 2), (Height * 0.5) - (TextHeight * 0.5))
+		surface.DrawText(Text)
+	end
 end
 
 function PANEL:AddSubOption(Label, Table, Key, Type)
@@ -124,6 +141,8 @@ function PANEL:OpenConfiguration()
 end
 
 function PANEL:Open()
+	self:SetOpen(true)
+
 	local SubOptions = self:GetSubOptions()
 
 	if #SubOptions < 1 then
@@ -151,6 +170,8 @@ function PANEL:Open()
 end
 
 function PANEL:Close()
+	self:SetOpen(false)
+
 	local SubOptions = self:GetSubOptions()
 
 	if #SubOptions < 1 then
@@ -203,10 +224,6 @@ function PANEL:OnKeyCodePressed(Key)
 	elseif Key == KEY_LEFT then
 		self:Close()
 	end
-end
-
-function PANEL:OnFocusChanged(Gained)
-	--print(self:GetText(), Gained)
 end
 
 vgui.Register("pkscript_Option", PANEL, "pkscript_Base")
