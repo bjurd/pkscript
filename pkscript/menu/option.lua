@@ -75,9 +75,9 @@ function PANEL:PaintForeground(Width, Height)
 
 		if VarTable then
 			if VarTable[self:GetVarKey()] then
-				surface.SetTextColor(0, 255, 0, 255)
+				surface.SetTextColor(pkscript.Colors.Green)
 			else
-				surface.SetTextColor(255, 0, 0, 255)
+				surface.SetTextColor(pkscript.Colors.Red)
 			end
 		end
 	end
