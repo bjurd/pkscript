@@ -100,4 +100,15 @@ function PANEL:Show()
 	self:FocusOption()
 end
 
+function PANEL:Hide()
+	self:SetVisible(false)
+
+	-- TODO: There's probably a better way to do this. This is only here because calling :Hide on the parent doesn't called :Hide on children
+	local Children = self:GetChildren()
+
+	for i = 1, #Children do
+		Children[i]:Close()
+	end
+end
+
 vgui.Register("pkscript_Frame", PANEL, "pkscript_Base")
