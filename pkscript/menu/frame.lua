@@ -65,6 +65,7 @@ function PANEL:AddOption(Label, Table, Key, Type)
 
 	Option:SetParent(self)
 	Option:Dock(TOP)
+	Option:SetZPos(#self:GetChildren() + 1) -- Keep them in the order they're added
 
 	Option:SetFont(self:GetFont())
 	Option:SetText(Label)
@@ -85,10 +86,25 @@ function PANEL:FocusOption()
 end
 
 function PANEL:OnKeyCodePressed(Key)
-	if Key == KEY_UP then
-		print("frame up")
-	elseif Key == KEY_DOWN then
-		print("frame down")
+	if Key == KEY_UP or Key == KEY_DOWN then
+		local LastFocus = vgui.GetKeyboardFocus()
+
+		local Children = self:GetChildren()
+		local Index = table.KeyFromValue(Children, LastFocus) -- T_T
+
+		if IsValid(LastFocus) and isnumber(Index) then
+			if Key == KEY_UP then Index = Index - 1 end
+			if Key == KEY_DOWN then Index = Index + 1 end
+
+			if Index < 1 then Index = #Children end
+			if Index > #Children then Index = 1 end
+
+			local FocusOption = Children[Index]
+
+			if IsValid(FocusOption) then
+				FocusOption:MakePopup()
+			end
+		end
 	end
 
 	self:FocusOption()

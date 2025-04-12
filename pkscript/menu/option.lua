@@ -97,6 +97,8 @@ function PANEL:AddSubOption(Label, Table, Key, Type)
 		return nil
 	end
 
+	Option:SetZPos(#self:GetSubOptions() + 1)
+
 	Option:SetFont(self:GetFont())
 	Option:SetText(Label)
 
@@ -121,8 +123,6 @@ function PANEL:FocusTop(Close)
 		if Close then
 			Top:Close()
 		end
-
-		print(self:GetText(), "focused", Top:GetText(), "closed: ", Close)
 
 		return Top
 	else
