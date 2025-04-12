@@ -81,9 +81,11 @@ function Movement.QuickStop(Command)
 end
 
 function Movement.CreateMove(Command)
-	Movement.AutoStrafe(Command)
-	Movement.BunnyHop(Command)
-	Movement.QuickStop(Command)
+	if pkscript.LocalPlayer:GetMoveType() == MOVETYPE_WALK then
+		Movement.AutoStrafe(Command)
+		Movement.BunnyHop(Command)
+		Movement.QuickStop(Command)
+	end
 end
 
 pkscript.Hooks.Register("CreateMove", Movement.CreateMove)
