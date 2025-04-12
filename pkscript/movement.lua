@@ -1,6 +1,15 @@
 pkscript.Movement = pkscript.Movement or {}
 local Movement = pkscript.Movement
 
+Movement.Config = Movement.Config or {}
+local Config = Movement.Config
+
+Config.AutoStrafe = true -- TODO: Make this modes instead of on/off
+
+Config.BunnyHop = true
+
+Config.QuickStop = false -- TODO: Implement
+
 do -- AutoStrafe
 	local LastFacing = pkscript.LocalPlayer:EyeAngles()
 
@@ -20,6 +29,8 @@ do -- AutoStrafe
 	end
 
 	function Movement.AutoStrafe(Command)
+		if not Config.AutoStrafe then return end
+
 		-- TODO: Other strafe modes
 		Movement.RageStrafe(Command)
 	end
@@ -32,18 +43,22 @@ do -- Bunny Hop
 	function Movement.BunnyHop(Command)
 		local Grounded = pkscript.LocalPlayer:IsOnGround()
 
-		if Command:KeyDown(IN_JUMP) and not Grounded then
-			GroundedTicks = 0
-
-			Command:RemoveKey(IN_JUMP)
-		elseif LastGrounded and Grounded then
-			GroundedTicks = GroundedTicks + 1
-
-			if GroundedTicks > 2 then -- Prevent getting stuck (sv_sticktoground & slopes)
+		if Config.BunnyHop then
+			if Command:KeyDown(IN_JUMP) and not Grounded then
 				GroundedTicks = 0
 
 				Command:RemoveKey(IN_JUMP)
+			elseif LastGrounded and Grounded then
+				GroundedTicks = GroundedTicks + 1
+
+				if GroundedTicks > 2 then -- Prevent getting stuck (sv_sticktoground & slopes)
+					GroundedTicks = 0
+
+					Command:RemoveKey(IN_JUMP)
+				end
 			end
+		else
+			GroundedTicks = 0
 		end
 
 		LastGrounded = Grounded
