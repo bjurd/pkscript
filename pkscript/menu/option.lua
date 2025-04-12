@@ -155,6 +155,8 @@ function PANEL:Open()
 	local Width, Height = self:GetSize()
 	local ScreenX, ScreenY = self:LocalToScreen(Width, 0)
 
+	ScreenX = ScreenX - 1 -- Prevent double border
+
 	for i = 1, #SubOptions do
 		local SubOption = SubOptions[i]
 
