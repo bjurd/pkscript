@@ -128,15 +128,11 @@ function PANEL:AddSubOption(Label, Table, Key, Type)
 	return Option
 end
 
-function PANEL:FocusTop(Close)
+function PANEL:FocusTop()
 	local Top = self:GetTopOption()
 
 	if IsValid(Top) then
 		Top:RequestFocus()
-
-		if Close then
-			Top:Close()
-		end
 
 		return Top
 	else
@@ -209,19 +205,18 @@ function PANEL:Close()
 
 	if #SubOptions < 1 then
 		self:CloseConfiguration()
-		self:FocusTop(true)
+		self:FocusTop()
 
 		return
 	end
-
-	-- Hide sub-options
 
 	for i = 1, #SubOptions do
 		SubOptions[i]:Hide()
 	end
 
-	self:FocusTop(true)
+	self:FocusTop()
 end
+
 
 function PANEL:OnKeyCodePressed(Key)
 	if Key == KEY_UP or Key == KEY_DOWN then
@@ -245,7 +240,7 @@ function PANEL:OnKeyCodePressed(Key)
 				FocusOption:MakePopup()
 			end
 		else
-			local Top = self:FocusTop(false)
+			local Top = self:FocusTop()
 
 			if IsValid(Top) then -- Pass through to non-parent
 				Top:OnKeyCodePressed(Key)
@@ -254,7 +249,15 @@ function PANEL:OnKeyCodePressed(Key)
 	elseif Key == KEY_RIGHT then
 		self:Open()
 	elseif Key == KEY_LEFT then
-		self:Close()
+		if self:GetOpen() then
+			self:Close()
+		else
+			local Top = self:FocusTop()
+
+			if IsValid(Top) then
+				Top:OnKeyCodePressed(Key)
+			end
+		end
 	end
 end
 
