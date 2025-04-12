@@ -5,10 +5,8 @@ Movement.Config = Movement.Config or {}
 local Config = Movement.Config
 
 Config.AutoStrafe = true -- TODO: Make this modes instead of on/off
-
 Config.BunnyHop = true
-
-Config.QuickStop = false -- TODO: Implement
+Config.QuickStop = false
 
 do -- AutoStrafe
 	local LastFacing = pkscript.LocalPlayer:EyeAngles()
@@ -65,9 +63,27 @@ do -- Bunny Hop
 	end
 end
 
+function Movement.QuickStop(Command)
+	if not Config.QuickStop then return end
+
+	if pkscript.LocalPlayer:IsOnGround() and Command:GetForwardMove() == 0 and Command:GetSideMove() == 0 then
+		local Velocity = pkscript.LocalPlayer:GetVelocity()
+
+		local Angles = Velocity:Angle()
+		Angles.yaw = Command:GetViewAngles().yaw - Angles.yaw
+
+		local NewMove = Angles:Forward()
+		NewMove:Mul(Velocity:Length2D())
+
+		Command:SetForwardMove(-NewMove.x)
+		Command:SetSideMove(-NewMove.y)
+	end
+end
+
 function Movement.CreateMove(Command)
 	Movement.AutoStrafe(Command)
 	Movement.BunnyHop(Command)
+	Movement.QuickStop(Command)
 end
 
 pkscript.Hooks.Register("CreateMove", Movement.CreateMove)
