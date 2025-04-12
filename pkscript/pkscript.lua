@@ -10,6 +10,7 @@ include("hooks.lua")
 include("movement.lua")
 
 include("menu.lua")
+include("menu/build.lua")
 
 function pkscript.Unload()
 	pkscript.Menu.Destroy()

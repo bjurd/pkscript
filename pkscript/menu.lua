@@ -1,8 +1,11 @@
 pkscript.Menu = pkscript.Menu or {}
 local Menu = pkscript.Menu
 
+Menu.Font = "DebugOverlay" -- Default
+
 include("menu/base.lua")
 include("menu/frame.lua")
+include("menu/option.lua")
 
 function Menu.Destroy()
 	Menu.Close()
@@ -27,6 +30,7 @@ function Menu.Setup()
 
 	Menu.Instance = Instance
 
+	Menu.Build()
 	Menu.Close() -- Start hidden
 
 	return true
@@ -39,6 +43,7 @@ function Menu.Open()
 	end
 
 	Menu.Instance:Show()
+	Menu.Instance:MakePopup()
 end
 
 function Menu.Close()
