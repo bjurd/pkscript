@@ -5,6 +5,7 @@ else
 end
 
 include("globals.lua")
+include("util.lua")
 include("hooks.lua")
 
 include("movement.lua")
