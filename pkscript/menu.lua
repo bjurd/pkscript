@@ -65,4 +65,30 @@ function Menu.Toggle()
 	end
 end
 
+function Menu.UnRegister()
+	-- Unregister VGUI panel class
+	local Name, Variable = debug.getupvalue(vgui.GetControlTable, 1)
+
+	if Name == "PanelFactory" and istable(Variable) then
+		for Class, _ in next, Variable do
+			if string.StartsWith(Class, "pkscript_") then
+				Variable[Class] = nil
+			end
+		end
+	end
+
+	-- Unregister baseclass class
+	Name, Variable = debug.getupvalue(baseclass.Get, 1)
+
+	if Name == "BaseClassTable" and istable(Variable) then
+		for Class, _ in next, Variable do
+			if string.StartsWith(Class, "pkscript_") then
+				Variable[Class] = nil
+			end
+		end
+	end
+end
+
+pkscript.Hooks.Register("PKScript:Unload", Menu.UnRegister)
+
 concommand.Add("pkscript_menu", Menu.Toggle)
