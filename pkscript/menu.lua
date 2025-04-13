@@ -7,6 +7,17 @@ include("pkscript/menu/base.lua")
 include("pkscript/menu/frame.lua")
 include("pkscript/menu/option.lua")
 
+function Menu.IsMenuKey(Key)
+	local Bind = input.LookupKeyBinding(Key)
+	if not Bind then return false end
+
+	if string.find(Bind, "pkscript_menu") then
+		return true
+	else
+		return false
+	end
+end
+
 function Menu.Destroy()
 	Menu.Close()
 

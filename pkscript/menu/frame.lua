@@ -88,6 +88,11 @@ function PANEL:FocusOption()
 end
 
 function PANEL:OnKeyCodePressed(Key)
+	if pkscript.Menu.IsMenuKey(Key) then
+		pkscript.Menu.Close()
+		return
+	end
+
 	if Key == KEY_UP or Key == KEY_DOWN then
 		local LastFocus = vgui.GetKeyboardFocus()
 
