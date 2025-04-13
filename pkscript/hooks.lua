@@ -8,7 +8,6 @@ function Hooks.Run(Type, ...)
 	local List = Hooks.List[Type]
 
 	if not List then -- Don't istable for performance sake
-		error("Tried to run non-existent hook!")
 		return
 	end
 
@@ -51,7 +50,6 @@ function Hooks.UnRegister(Type, Callback)
 	local CallbackList = Hooks.CallbackList[Type]
 
 	if not istable(List) or not istable(CallbackList) then
-		error("Tried to unregister non-existent hook!")
 		return
 	end
 
