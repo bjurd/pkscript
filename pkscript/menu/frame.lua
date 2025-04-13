@@ -8,6 +8,8 @@ AccessorFunc(PANEL, "m_strText", "Text", FORCE_STRING)
 PANEL.GradientUp = Material("gui/gradient_up")
 
 function PANEL:Init()
+	self:SetPos(10, 10)
+
 	self:SetBarHeight(24)
 
 	self:SetFont(pkscript.Menu.Font)
@@ -102,12 +104,17 @@ function PANEL:OnKeyCodePressed(Key)
 			local FocusOption = Children[Index]
 
 			if IsValid(FocusOption) then
-				FocusOption:MakePopup()
+				FocusOption:RequestFocus()
+				return
 			end
 		end
 	end
 
 	self:FocusOption()
+end
+
+function PANEL:PerformLayout(Width, Height)
+	self:SizeToChildren(false, true)
 end
 
 function PANEL:Show()
