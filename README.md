@@ -12,6 +12,6 @@ Garry's Mod propkill script
 3. Open pkscript-main
 4. Drag pkscript folder into `garrysmod/lua` (`garrysmod/lua/pkscript`)
 5. `lua_openscript_cl pkscript/pkscript.lua`
-6. `pkscript_menu` to open menu
+6. `pkscript_menu` to open menu (it's best to bind it)
 
 </details>
