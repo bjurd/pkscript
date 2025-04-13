@@ -74,7 +74,4 @@ function Hooks.UnRegisterAll()
 			Hooks.UnRegister(Type, List[i])
 		end
 	end
-
-	PrintTable(Hooks.List)
-	PrintTable(Hooks.CallbackList)
 end
