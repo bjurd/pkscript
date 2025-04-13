@@ -192,7 +192,7 @@ function PANEL:Open()
 		SubOption:MakePopup() -- Because MoveToFront doesn't work for some reason
 		SubOption:Show()
 
-		ScreenY = ScreenY + Height
+		ScreenY = ScreenY + (Height - 1) -- Prevent double borders
 	end
 
 	SubOptions[1]:MakePopup()
