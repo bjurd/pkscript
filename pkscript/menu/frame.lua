@@ -110,12 +110,9 @@ function PANEL:OnKeyCodePressed(Key)
 
 			if IsValid(FocusOption) then
 				FocusOption:RequestFocus()
-				return
 			end
 		end
 	end
-
-	self:FocusOption()
 end
 
 function PANEL:PerformLayout(Width, Height)
