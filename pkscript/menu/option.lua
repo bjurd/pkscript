@@ -211,6 +211,7 @@ function PANEL:Close()
 	end
 
 	for i = 1, #SubOptions do
+		SubOptions[i]:Close()
 		SubOptions[i]:Hide()
 	end
 
