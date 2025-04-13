@@ -23,6 +23,7 @@ Config.PlayerESP.Bounds = pkscript.Util.ConfigDefault(Config.PlayerESP.Bounds, f
 
 Config.PlayerESP.ColoredModels = Config.PlayerESP.ColoredModels or {}
 Config.PlayerESP.ColoredModels.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Enabled, false)
+Config.PlayerESP.ColoredModels.IgnoreZ = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.IgnoreZ, false)
 
 Config.PropESP = Config.PropESP or {}
 Config.PropESP.Enabled = pkscript.Util.ConfigDefault(Config.PropESP.Enabled, true)
@@ -170,11 +171,16 @@ function Visuals.PlayerRenderOverride(Player, Flags) -- Always runs if Colored M
 		return
 	end
 
-	render.MaterialOverride(Config.Materials.Flat)
-	do
-		Player:DrawModel()
+	if Config.PlayerESP.ColoredModels.IgnoreZ then
+		cam.IgnoreZ(true)
 	end
+
+	render.MaterialOverride(Config.Materials.Flat)
+
+	Player:DrawModel()
+
 	render.MaterialOverride(nil)
+	cam.IgnoreZ(false)
 end
 
 function Visuals.PlayerESP3D(Player)
