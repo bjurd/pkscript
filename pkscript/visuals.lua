@@ -11,12 +11,18 @@ Config.Fonts = Config.Fonts or {} -- TODO: No idea how to do this in a menu cont
 Config.Fonts.NameTags = pkscript.Util.ConfigDefault(Config.Fonts.NameTags, "TargetID")
 Config.Fonts.Weapons = pkscript.Util.ConfigDefault(Config.Fonts.Weapons, "DefaultFixed")
 
+Config.Materials = Config.Materials or {}
+Config.Materials.Flat = Material("models/debug/debugwhite")
+
 Config.PlayerESP = Config.PlayerESP or {}
 Config.PlayerESP.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.Enabled, true)
 Config.PlayerESP.NameTags = pkscript.Util.ConfigDefault(Config.PlayerESP.NameTags, true)
 Config.PlayerESP.Weapons = pkscript.Util.ConfigDefault(Config.PlayerESP.Weapons, true)
 Config.PlayerESP.Health = pkscript.Util.ConfigDefault(Config.PlayerESP.Health, false)
 Config.PlayerESP.Bounds = pkscript.Util.ConfigDefault(Config.PlayerESP.Bounds, false)
+
+Config.PlayerESP.ColoredModels = Config.PlayerESP.ColoredModels or {}
+Config.PlayerESP.ColoredModels.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Enabled, false)
 
 Config.PropESP = Config.PropESP or {}
 Config.PropESP.Enabled = pkscript.Util.ConfigDefault(Config.PropESP.Enabled, true)
@@ -156,6 +162,21 @@ function Visuals.ESP2D()
 	cam.End2D()
 end
 
+function Visuals.PlayerRenderOverride(Player, Flags) -- Always runs if Colored Models are enabled, no need to check it here
+	if bit.band(Flags, STUDIO_RENDER) ~= STUDIO_RENDER then return end
+
+	if not Config.PlayerESP.Enabled then -- In case ESP was disabled but Colored Models werent
+		Player:DrawModel()
+		return
+	end
+
+	render.MaterialOverride(Config.Materials.Flat)
+	do
+		Player:DrawModel()
+	end
+	render.MaterialOverride(nil)
+end
+
 function Visuals.PlayerESP3D(Player)
 	if not Config.PlayerESP.Enabled then return end
 	if Player == pkscript.LocalPlayer then return end -- TODO: LocalPlayer options ?
@@ -166,6 +187,13 @@ function Visuals.PlayerESP3D(Player)
 		local Mins, Maxs = Player:GetCollisionBounds()
 
 		render.DrawWireframeBox(Player:GetPos(), angle_zero, Mins, Maxs, color_white, false)
+	end
+
+	if Config.PlayerESP.ColoredModels.Enabled then
+		Player.RenderOverride = Visuals.PlayerRenderOverride
+	else
+		-- TODO: This has the possibility to break some things
+		Player.RenderOverride = nil
 	end
 end
 
@@ -252,11 +280,19 @@ end
 function Visuals.UnCacheEntity(Entity)
 	if not Visuals.EntityCacheKeys[Entity] then return end
 
+	Entity.RenderOverride = nil -- TODO: This has the possibility to break some things
+
 	table.remove(Visuals.EntityCache, Visuals.EntityCacheKeys[Entity])
 	Visuals.EntityCacheKeys[Entity] = nil
 
 	-- table.remove shifts the indices
 	Visuals.UpdateCacheIndices()
+end
+
+function Visuals.WipeEntityCache()
+	for Entity, _ in next, Visuals.EntityCacheKeys do
+		Visuals.UnCacheEntity(Entity)
+	end
 end
 
 pkscript.Hooks.Register("PreRender", Visuals.PrepareEntityCache)
@@ -265,6 +301,7 @@ pkscript.Hooks.Register("PreDrawEffects", Visuals.ESP3D)
 pkscript.Hooks.Register("OnEntityCreated", Visuals.CacheEntity)
 pkscript.Hooks.Register("NetworkEntityCreated", Visuals.CacheEntity) -- Should be unnecessary, but doesn't hurt
 pkscript.Hooks.Register("EntityRemoved", Visuals.UnCacheEntity)
+pkscript.Hooks.Register("PKScript:Unload", Visuals.WipeEntityCache)
 
 -- Initial cache
 do

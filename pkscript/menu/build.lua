@@ -20,6 +20,9 @@ function Menu.Build()
 	PlayerESP:AddSubOption("Health", pkscript.Visuals.Config.PlayerESP, "Health", TYPE_BOOL)
 	PlayerESP:AddSubOption("Bounding Boxes", pkscript.Visuals.Config.PlayerESP, "Bounds", TYPE_BOOL)
 
+	local ColoredModels = PlayerESP:AddSubOption("Colored Models")
+	ColoredModels:AddSubOption("Enabled", pkscript.Visuals.Config.PlayerESP.ColoredModels, "Enabled", TYPE_BOOL)
+
 	local PropESP = Visuals:AddSubOption("Prop ESP")
 	PropESP:AddSubOption("Enabled", pkscript.Visuals.Config.PropESP, "Enabled", TYPE_BOOL)
 	PropESP:AddSubOption("Bounding Boxes", pkscript.Visuals.Config.PropESP, "Bounds", TYPE_BOOL)

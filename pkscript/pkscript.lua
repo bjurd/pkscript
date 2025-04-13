@@ -15,6 +15,8 @@ include("pkscript/menu.lua")
 include("pkscript/menu/build.lua")
 
 function pkscript.Unload()
+	pkscript.Hooks.Run("PKScript:Unload")
+
 	pkscript.Menu.Destroy()
 	pkscript.Hooks.UnRegisterAll()
 end
