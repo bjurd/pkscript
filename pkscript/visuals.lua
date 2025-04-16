@@ -19,6 +19,7 @@ Config.Fonts.Weapons = pkscript.Util.ConfigDefault(Config.Fonts.Weapons, "Defaul
 
 Config.Materials = Config.Materials or {}
 Config.Materials.Flat = Material("models/debug/debugwhite")
+Config.Materials.Shiny = Material("models/shiny")
 
 Config.PlayerESP = Config.PlayerESP or {}
 Config.PlayerESP.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.Enabled, true)
@@ -28,6 +29,7 @@ Config.PlayerESP.Health = pkscript.Util.ConfigDefault(Config.PlayerESP.Health, f
 Config.PlayerESP.Bounds = pkscript.Util.ConfigDefault(Config.PlayerESP.Bounds, false)
 
 Config.PlayerESP.ColoredModels = Config.PlayerESP.ColoredModels or {}
+Config.PlayerESP.ColoredModels.Material = "Flat"
 Config.PlayerESP.ColoredModels.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Enabled, false)
 Config.PlayerESP.ColoredModels.IgnoreZ = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.IgnoreZ, false)
 
@@ -36,6 +38,7 @@ Config.PropESP.Enabled = pkscript.Util.ConfigDefault(Config.PropESP.Enabled, tru
 Config.PropESP.Bounds = pkscript.Util.ConfigDefault(Config.PropESP.Bounds, true) -- Actually hitboxes because props are dumb
 
 Config.PropESP.ColoredModels = Config.PropESP.ColoredModels or {}
+Config.PropESP.ColoredModels.Material = "Flat"
 Config.PropESP.ColoredModels.Enabled = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Enabled, true)
 Config.PropESP.ColoredModels.IgnoreZ = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.IgnoreZ, false)
 
@@ -185,7 +188,7 @@ function Visuals.PlayerRenderOverride(Player, Flags) -- Always runs if Colored M
 		cam.IgnoreZ(true)
 	end
 
-	render.MaterialOverride(Config.Materials.Flat)
+	render.MaterialOverride(Config.Materials[Config.PlayerESP.ColoredModels.Material])
 
 	Player:DrawModel()
 
@@ -225,7 +228,7 @@ function Visuals.PropRenderOverride(Prop, Flags)
 		cam.IgnoreZ(true)
 	end
 
-	render.MaterialOverride(Config.Materials.Flat)
+	render.MaterialOverride(Config.Materials[Config.PropESP.ColoredModels.Material])
 
 	Prop:DrawModel()
 

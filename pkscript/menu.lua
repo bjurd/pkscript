@@ -6,6 +6,7 @@ Menu.Font = "DebugOverlay" -- Default
 include("pkscript/menu/base.lua")
 include("pkscript/menu/frame.lua")
 include("pkscript/menu/option.lua")
+include("pkscript/menu/dropdown.lua")
 
 function Menu.IsMenuKey(Key)
 	local Bind = input.LookupKeyBinding(Key)

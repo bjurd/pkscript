@@ -13,6 +13,9 @@ function Menu.Build()
 
 	local Visuals = Instance:AddOption("Visuals")
 
+	local Materials = table.GetKeys(pkscript.Visuals.Config.Materials)
+	table.sort(Materials)
+
 	local PlayerESP = Visuals:AddSubOption("Player ESP")
 	PlayerESP:AddSubOption("Enabled", pkscript.Visuals.Config.PlayerESP, "Enabled", TYPE_BOOL)
 	PlayerESP:AddSubOption("Name Tags", pkscript.Visuals.Config.PlayerESP, "NameTags", TYPE_BOOL)
@@ -23,6 +26,7 @@ function Menu.Build()
 	local ColoredModels = PlayerESP:AddSubOption("Colored Models")
 	ColoredModels:AddSubOption("Enabled", pkscript.Visuals.Config.PlayerESP.ColoredModels, "Enabled", TYPE_BOOL)
 	ColoredModels:AddSubOption("Ignore Z", pkscript.Visuals.Config.PlayerESP.ColoredModels, "IgnoreZ", TYPE_BOOL)
+	ColoredModels:AddDropdown("Material", pkscript.Visuals.Config.PlayerESP.ColoredModels, "Material", Materials)
 
 	local PropESP = Visuals:AddSubOption("Prop ESP")
 	PropESP:AddSubOption("Enabled", pkscript.Visuals.Config.PropESP, "Enabled", TYPE_BOOL)
@@ -31,4 +35,5 @@ function Menu.Build()
 	ColoredModels = PropESP:AddSubOption("Colored Models")
 	ColoredModels:AddSubOption("Enabled", pkscript.Visuals.Config.PropESP.ColoredModels, "Enabled", TYPE_BOOL)
 	ColoredModels:AddSubOption("Ignore Z", pkscript.Visuals.Config.PropESP.ColoredModels, "IgnoreZ", TYPE_BOOL)
+	ColoredModels:AddDropdown("Material", pkscript.Visuals.Config.PropESP.ColoredModels, "Material", Materials)
 end

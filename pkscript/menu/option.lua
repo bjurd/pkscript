@@ -38,7 +38,7 @@ function PANEL:GetSubOptionIndex(SubOption)
 	return self:GetSubOptionKeys()[SubOption] or -1
 end
 
-function PANEL:OnRemove()
+function PANEL:DestroyOptions()
 	local SubOptions = self:GetSubOptions()
 	local SubOptionKeys = self:GetSubOptionKeys()
 
@@ -49,6 +49,10 @@ function PANEL:OnRemove()
 		table.remove(SubOptions, i) -- This makes SubOptionKeys out of sync, but it's okay since everything is being trashed
 		SubOptionKeys[SubOption] = nil
 	end
+end
+
+function PANEL:OnRemove()
+	self:DestroyOptions()
 end
 
 function PANEL:PaintBackground(Width, Height)
@@ -70,14 +74,18 @@ function PANEL:PaintForeground(Width, Height)
 	surface.SetFont(self:GetFont())
 	surface.SetTextColor(self:GetTextColor())
 
-	if not HasSubOptions and self:GetVarType() == TYPE_BOOL then
+	if not HasSubOptions then
 		local VarTable = self:GetVarTable()
 
 		if VarTable then
-			if VarTable[self:GetVarKey()] then
-				surface.SetTextColor(pkscript.Colors.Green)
+			if self:GetVarType() == TYPE_BOOL then
+				if VarTable[self:GetVarKey()] then
+					surface.SetTextColor(pkscript.Colors.Green)
+				else
+					surface.SetTextColor(pkscript.Colors.Red)
+				end
 			else
-				surface.SetTextColor(pkscript.Colors.Red)
+				self:SetText(tostring(VarTable[self:GetVarKey()]))
 			end
 		end
 	end
@@ -128,6 +136,32 @@ function PANEL:AddSubOption(Label, Table, Key, Type)
 	return Option
 end
 
+function PANEL:AddDropdown(Label, Table, Key, Options)
+	local Dropdown = vgui.Create("pkscript_Dropdown")
+
+	if not IsValid(Dropdown) then
+		error("Failed to create dropdown!")
+		return nil
+	end
+
+	Dropdown:SetZPos(#self:GetSubOptions() + 1)
+
+	Dropdown:SetFont(self:GetFont())
+	Dropdown:SetText(Label)
+
+	Dropdown:SetVarTable(Table)
+	Dropdown:SetVarKey(Key)
+	Dropdown:SetVarType(Type)
+	Dropdown:SetOptionsTable(Options)
+	Dropdown:SetTopOption(self)
+
+	Dropdown:Hide()
+
+	self:GetSubOptionKeys()[Dropdown] = table.insert(self:GetSubOptions(), Dropdown)
+
+	return Dropdown
+end
+
 function PANEL:FocusTop()
 	local Top = self:GetTopOption()
 
@@ -146,6 +180,10 @@ function PANEL:FocusTop()
 	return nil
 end
 
+function PANEL:OnValueChanged(OldValue, NewValue)
+
+end
+
 function PANEL:OpenConfiguration()
 	-- TODO: Support things other than booleans and give them their own menu
 
@@ -154,8 +192,11 @@ function PANEL:OpenConfiguration()
 
 		if istable(VarTable) then
 			local VarKey = self:GetVarKey()
+			local Current = VarTable[VarKey]
 
-			VarTable[VarKey] = not VarTable[VarKey]
+			VarTable[VarKey] = not Current
+
+			self:OnValueChanged(Current, VarTable[VarKey])
 		end
 	end
 
