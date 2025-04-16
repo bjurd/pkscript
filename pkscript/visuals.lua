@@ -20,6 +20,17 @@ Config.Fonts.Weapons = pkscript.Util.ConfigDefault(Config.Fonts.Weapons, "Defaul
 Config.Materials = Config.Materials or {}
 Config.Materials.Flat = Material("models/debug/debugwhite")
 Config.Materials.Shiny = Material("models/shiny")
+Config.Materials.Glow = CreateMaterial("pkscript_Glow", "VertexLitGeneric", {
+	["$basetexture"] = "vgui/white_additive",
+	["$bumpmap"] = "vgui/white_additive",
+
+	["$ignorez"] = 0,
+
+	["$selfillum"] = 1,
+	["$selfillumFresnel"] = 1,
+	["$selfillumFresnelMinMaxExp"] = "[0 1 1]",
+	["$selfillumtint"] = "[0 0 0]"
+})
 
 -- Players
 Config.PlayerESP = Config.PlayerESP or {}
@@ -206,7 +217,13 @@ function Visuals.PlayerRenderOverride(Player, Flags) -- Always runs if Colored M
 		cam.IgnoreZ(true)
 	end
 
-	render.MaterialOverride(Config.Materials[Config.PlayerESP.ColoredModels.Material])
+	local Material = Config.Materials[Config.PlayerESP.ColoredModels.Material]
+
+	if Material == Config.Materials.Glow then
+		render.SuppressEngineLighting(true)
+	end
+
+	render.MaterialOverride(Material)
 
 	local Color = pkscript.Colors[Config.PlayerESP.ColoredModels.Color]
 	render.SetColorModulation(Color.r / 255, Color.g / 255, Color.b / 255)
@@ -215,6 +232,8 @@ function Visuals.PlayerRenderOverride(Player, Flags) -- Always runs if Colored M
 
 	render.SetColorModulation(1, 1, 1)
 	render.MaterialOverride(nil)
+	render.SuppressEngineLighting(false)
+
 	cam.IgnoreZ(false)
 end
 
@@ -250,7 +269,13 @@ function Visuals.PropRenderOverride(Prop, Flags)
 		cam.IgnoreZ(true)
 	end
 
-	render.MaterialOverride(Config.Materials[Config.PropESP.ColoredModels.Material])
+	local Material = Config.Materials[Config.PropESP.ColoredModels.Material]
+
+	if Material == Config.Materials.Glow then
+		render.SuppressEngineLighting(true)
+	end
+
+	render.MaterialOverride(Material)
 
 	local Color = pkscript.Colors[Config.PropESP.ColoredModels.Color]
 	render.SetColorModulation(Color.r / 255, Color.g / 255, Color.b / 255)
@@ -259,6 +284,8 @@ function Visuals.PropRenderOverride(Prop, Flags)
 
 	render.SetColorModulation(1, 1, 1)
 	render.MaterialOverride(nil)
+	render.SuppressEngineLighting(false)
+
 	cam.IgnoreZ(false)
 end
 
@@ -334,7 +361,13 @@ function Visuals.PreDrawViewModel()
 		return
 	end
 
-	render.MaterialOverride(Config.Materials[Config.Viewmodel.Weapon.Material])
+	local Material = Config.Materials[Config.Viewmodel.Weapon.Material]
+
+	if Material == Config.Materials.Glow then
+		render.SuppressEngineLighting(true)
+	end
+
+	render.MaterialOverride(Material)
 
 	local Color = pkscript.Colors[Config.Viewmodel.Weapon.Color]
 	render.SetColorModulation(Color.r / 255, Color.g / 255, Color.b / 255)
@@ -347,8 +380,9 @@ function Visuals.PostDrawViewModel()
 		return
 	end
 
-	render.MaterialOverride(nil)
 	render.SetColorModulation(1, 1, 1)
+	render.MaterialOverride(nil)
+	render.SuppressEngineLighting(false)
 end
 
 function Visuals.PreDrawPlayerHands()
@@ -361,7 +395,13 @@ function Visuals.PreDrawPlayerHands()
 		return
 	end
 
-	render.MaterialOverride(Config.Materials[Config.Viewmodel.Hands.Material])
+	local Material = Config.Materials[Config.Viewmodel.Hands.Material]
+
+	if Material == Config.Materials.Glow then
+		render.SuppressEngineLighting(true)
+	end
+
+	render.MaterialOverride(Material)
 
 	local Color = pkscript.Colors[Config.Viewmodel.Hands.Color]
 	render.SetColorModulation(Color.r / 255, Color.g / 255, Color.b / 255)
@@ -374,8 +414,9 @@ function Visuals.PostDrawPlayerHands()
 		return
 	end
 
-	render.MaterialOverride(nil)
 	render.SetColorModulation(1, 1, 1)
+	render.MaterialOverride(nil)
+	render.SuppressEngineLighting(false)
 end
 
 function Visuals.PrepareEntityCache()
