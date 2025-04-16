@@ -7,7 +7,7 @@ local Config = Misc.Config
 Config.AutoCleanup = Config.AutoCleanup or {}
 Config.AutoCleanup.Enabled = pkscript.Util.ConfigDefault(Config.AutoCleanup.Enabled, false)
 Config.AutoCleanup.OnDeath = pkscript.Util.ConfigDefault(Config.AutoCleanup.OnDeath, false)
-Config.AutoCleanup.OnRelease = pkscript.Util.ConfigDefault(Config.AutoCleanup.OnRelease, false)
+Config.AutoCleanup.OnRelease = pkscript.Util.ConfigDefault(Config.AutoCleanup.OnRelease, false) -- This isn't useful for propkill since it'll just disappear when you throw, useful for just flyin' around
 
 do -- Auto Cleanup
 	local AliveLast
