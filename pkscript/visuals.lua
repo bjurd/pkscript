@@ -31,6 +31,7 @@ Config.PlayerESP.Bounds = pkscript.Util.ConfigDefault(Config.PlayerESP.Bounds, f
 
 Config.PlayerESP.ColoredModels = Config.PlayerESP.ColoredModels or {}
 Config.PlayerESP.ColoredModels.Material = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Material, "Flat")
+Config.PlayerESP.ColoredModels.Color = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Color, "White")
 Config.PlayerESP.ColoredModels.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Enabled, false)
 Config.PlayerESP.ColoredModels.IgnoreZ = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.IgnoreZ, false)
 
@@ -41,6 +42,7 @@ Config.PropESP.Bounds = pkscript.Util.ConfigDefault(Config.PropESP.Bounds, true)
 
 Config.PropESP.ColoredModels = Config.PropESP.ColoredModels or {}
 Config.PropESP.ColoredModels.Material = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Material, "Flat")
+Config.PropESP.ColoredModels.Color = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Color, "White")
 Config.PropESP.ColoredModels.Enabled = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Enabled, true)
 Config.PropESP.ColoredModels.IgnoreZ = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.IgnoreZ, false)
 
@@ -50,10 +52,12 @@ Config.Viewmodel.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Enabled,
 
 Config.Viewmodel.Hands = Config.Viewmodel.Hands or {}
 Config.Viewmodel.Hands.Material = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Material, "Flat")
+Config.Viewmodel.Hands.Color = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Color, "White")
 Config.Viewmodel.Hands.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Enabled, false)
 
 Config.Viewmodel.Weapon = Config.Viewmodel.Weapon or {}
 Config.Viewmodel.Weapon.Material = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Material, "Flat")
+Config.Viewmodel.Weapon.Color = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Color, "White")
 Config.Viewmodel.Weapon.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Enabled, false)
 
 function Visuals.SortEntities(A, B)
@@ -204,8 +208,12 @@ function Visuals.PlayerRenderOverride(Player, Flags) -- Always runs if Colored M
 
 	render.MaterialOverride(Config.Materials[Config.PlayerESP.ColoredModels.Material])
 
+	local Color = pkscript.Colors[Config.PlayerESP.ColoredModels.Color]
+	render.SetColorModulation(Color.r / 255, Color.g / 255, Color.b / 255)
+
 	Player:DrawModel()
 
+	render.SetColorModulation(1, 1, 1)
 	render.MaterialOverride(nil)
 	cam.IgnoreZ(false)
 end
@@ -244,8 +252,12 @@ function Visuals.PropRenderOverride(Prop, Flags)
 
 	render.MaterialOverride(Config.Materials[Config.PropESP.ColoredModels.Material])
 
+	local Color = pkscript.Colors[Config.PropESP.ColoredModels.Color]
+	render.SetColorModulation(Color.r / 255, Color.g / 255, Color.b / 255)
+
 	Prop:DrawModel()
 
+	render.SetColorModulation(1, 1, 1)
 	render.MaterialOverride(nil)
 	cam.IgnoreZ(false)
 end
@@ -323,7 +335,9 @@ function Visuals.PreDrawViewModel()
 	end
 
 	render.MaterialOverride(Config.Materials[Config.Viewmodel.Weapon.Material])
-	render.SetColorModulation(1, 1, 1)
+
+	local Color = pkscript.Colors[Config.Viewmodel.Weapon.Color]
+	render.SetColorModulation(Color.r / 255, Color.g / 255, Color.b / 255)
 end
 
 function Visuals.PostDrawViewModel()
@@ -348,7 +362,9 @@ function Visuals.PreDrawPlayerHands()
 	end
 
 	render.MaterialOverride(Config.Materials[Config.Viewmodel.Hands.Material])
-	render.SetColorModulation(1, 0, 1)
+
+	local Color = pkscript.Colors[Config.Viewmodel.Hands.Color]
+	render.SetColorModulation(Color.r / 255, Color.g / 255, Color.b / 255)
 end
 
 function Visuals.PostDrawPlayerHands()

@@ -1,8 +1,10 @@
 pkscript.LocalPlayer = LocalPlayer()
 
 pkscript.Colors = pkscript.Colors or {}
+pkscript.Colors.White = Color(255, 255, 255, 255)
 pkscript.Colors.Red = Color(255, 0, 0, 255)
 pkscript.Colors.Green = Color(0, 255, 0, 255)
+pkscript.Colors.Blue = Color(0, 0, 255, 255)
 
 pkscript.ConVars = pkscript.ConVars or {}
 pkscript.ConVars.cl_sidespeed = GetConVar("cl_sidespeed")
