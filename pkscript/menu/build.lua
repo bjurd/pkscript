@@ -54,4 +54,7 @@ function Menu.Build()
 	Weapon:AddSubOption("Enabled", pkscript.Visuals.Config.Viewmodel.Weapon, "Enabled", TYPE_BOOL)
 	Weapon:AddDropdown("Material", pkscript.Visuals.Config.Viewmodel.Weapon, "Material", Materials)
 	Weapon:AddDropdown("Color", pkscript.Visuals.Config.Viewmodel.Weapon, "Color", Colors)
+
+	local Misc = Instance:AddOption("Miscellaneous")
+	Misc:AddSubOption("Auto Cleanup", pkscript.Miscellaneous.Config, "Cleanup", TYPE_BOOL)
 end

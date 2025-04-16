@@ -10,6 +10,7 @@ include("pkscript/hooks.lua")
 
 include("pkscript/movement.lua")
 include("pkscript/visuals.lua")
+include("pkscript/miscellaneous.lua")
 
 include("pkscript/menu.lua")
 include("pkscript/menu/build.lua")
