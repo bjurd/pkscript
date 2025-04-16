@@ -21,6 +21,7 @@ Config.Materials = Config.Materials or {}
 Config.Materials.Flat = Material("models/debug/debugwhite")
 Config.Materials.Shiny = Material("models/shiny")
 
+-- Players
 Config.PlayerESP = Config.PlayerESP or {}
 Config.PlayerESP.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.Enabled, true)
 Config.PlayerESP.NameTags = pkscript.Util.ConfigDefault(Config.PlayerESP.NameTags, true)
@@ -29,18 +30,31 @@ Config.PlayerESP.Health = pkscript.Util.ConfigDefault(Config.PlayerESP.Health, f
 Config.PlayerESP.Bounds = pkscript.Util.ConfigDefault(Config.PlayerESP.Bounds, false)
 
 Config.PlayerESP.ColoredModels = Config.PlayerESP.ColoredModels or {}
-Config.PlayerESP.ColoredModels.Material = "Flat"
+Config.PlayerESP.ColoredModels.Material = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Material, "Flat")
 Config.PlayerESP.ColoredModels.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Enabled, false)
 Config.PlayerESP.ColoredModels.IgnoreZ = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.IgnoreZ, false)
 
+-- Props
 Config.PropESP = Config.PropESP or {}
 Config.PropESP.Enabled = pkscript.Util.ConfigDefault(Config.PropESP.Enabled, true)
 Config.PropESP.Bounds = pkscript.Util.ConfigDefault(Config.PropESP.Bounds, true) -- Actually hitboxes because props are dumb
 
 Config.PropESP.ColoredModels = Config.PropESP.ColoredModels or {}
-Config.PropESP.ColoredModels.Material = "Flat"
+Config.PropESP.ColoredModels.Material = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Material, "Flat")
 Config.PropESP.ColoredModels.Enabled = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Enabled, true)
 Config.PropESP.ColoredModels.IgnoreZ = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.IgnoreZ, false)
+
+-- Viewmodel
+Config.Viewmodel = Config.Viewmodel or {}
+Config.Viewmodel.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Enabled, false)
+
+Config.Viewmodel.Hands = Config.Viewmodel.Hands or {}
+Config.Viewmodel.Hands.Material = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Material, "Flat")
+Config.Viewmodel.Hands.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Enabled, false)
+
+Config.Viewmodel.Weapon = Config.Viewmodel.Weapon or {}
+Config.Viewmodel.Weapon.Material = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Material, "Flat")
+Config.Viewmodel.Weapon.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Enabled, false)
 
 function Visuals.SortEntities(A, B)
 	return A:GetPos():DistToSqr(Visuals.LocalPlayerPos) > B:GetPos():DistToSqr(Visuals.LocalPlayerPos)
@@ -298,6 +312,56 @@ function Visuals.ESP3D()
 	end
 end
 
+function Visuals.PreDrawViewModel()
+	if not Config.Viewmodel.Enabled then return end
+
+	if not Config.Viewmodel.Weapon.Enabled then
+		render.MaterialOverride(nil)
+		render.SetColorModulation(1, 1, 1)
+
+		return
+	end
+
+	render.MaterialOverride(Config.Materials[Config.Viewmodel.Weapon.Material])
+	render.SetColorModulation(1, 1, 1)
+end
+
+function Visuals.PostDrawViewModel()
+	if not Config.Viewmodel.Enabled then return end
+
+	if not Config.Viewmodel.Weapon.Enabled then
+		return
+	end
+
+	render.MaterialOverride(nil)
+	render.SetColorModulation(1, 1, 1)
+end
+
+function Visuals.PreDrawPlayerHands()
+	if not Config.Viewmodel.Enabled then return end
+
+	if not Config.Viewmodel.Hands.Enabled then
+		render.MaterialOverride(nil)
+		render.SetColorModulation(1, 1, 1)
+
+		return
+	end
+
+	render.MaterialOverride(Config.Materials[Config.Viewmodel.Hands.Material])
+	render.SetColorModulation(1, 0, 1)
+end
+
+function Visuals.PostDrawPlayerHands()
+	if not Config.Viewmodel.Enabled then return end
+
+	if not Config.Viewmodel.Hands.Enabled then
+		return
+	end
+
+	render.MaterialOverride(nil)
+	render.SetColorModulation(1, 1, 1)
+end
+
 function Visuals.PrepareEntityCache()
 	Visuals.CurrentEntities = {}
 
@@ -344,6 +408,10 @@ end
 pkscript.Hooks.Register("PreRender", Visuals.PrepareEntityCache)
 pkscript.Hooks.Register("PostDrawHUD", Visuals.ESP2D)
 pkscript.Hooks.Register("PreDrawEffects", Visuals.ESP3D)
+pkscript.Hooks.Register("PreDrawViewModel", Visuals.PreDrawViewModel)
+pkscript.Hooks.Register("PostDrawViewModel", Visuals.PostDrawViewModel)
+pkscript.Hooks.Register("PreDrawPlayerHands", Visuals.PreDrawPlayerHands)
+pkscript.Hooks.Register("PostDrawPlayerHands", Visuals.PostDrawPlayerHands)
 pkscript.Hooks.Register("OnEntityCreated", Visuals.CacheEntity)
 pkscript.Hooks.Register("NetworkEntityCreated", Visuals.CacheEntity) -- Should be unnecessary, but doesn't hurt
 pkscript.Hooks.Register("EntityRemoved", Visuals.UnCacheEntity)

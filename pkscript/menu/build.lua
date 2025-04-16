@@ -36,4 +36,15 @@ function Menu.Build()
 	ColoredModels:AddSubOption("Enabled", pkscript.Visuals.Config.PropESP.ColoredModels, "Enabled", TYPE_BOOL)
 	ColoredModels:AddSubOption("Ignore Z", pkscript.Visuals.Config.PropESP.ColoredModels, "IgnoreZ", TYPE_BOOL)
 	ColoredModels:AddDropdown("Material", pkscript.Visuals.Config.PropESP.ColoredModels, "Material", Materials)
+
+	local ColoredViewmodel = Visuals:AddSubOption("Colored Viewmodel")
+	ColoredViewmodel:AddSubOption("Enabled", pkscript.Visuals.Config.Viewmodel, "Enabled", TYPE_BOOL)
+
+	local Hands = ColoredViewmodel:AddSubOption("Hands")
+	Hands:AddSubOption("Enabled", pkscript.Visuals.Config.Viewmodel.Hands, "Enabled", TYPE_BOOL)
+	Hands:AddDropdown("Material", pkscript.Visuals.Config.Viewmodel.Hands, "Material", Materials)
+
+	local Weapon = ColoredViewmodel:AddSubOption("Weapon")
+	Weapon:AddSubOption("Enabled", pkscript.Visuals.Config.Viewmodel.Weapon, "Enabled", TYPE_BOOL)
+	Weapon:AddDropdown("Material", pkscript.Visuals.Config.Viewmodel.Weapon, "Material", Materials)
 end
