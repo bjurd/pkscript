@@ -13,7 +13,7 @@ function Menu.Build()
 
 	local Visuals = Instance:AddOption("Visuals")
 
-	local Materials = table.GetKeys(pkscript.Visuals.Config.Materials)
+	local Materials = table.GetKeys(pkscript.Visuals.Config.Materials) -- TODO: These tables are pretty unorganized :(
 	table.sort(Materials)
 
 	local Colors = table.GetKeys(pkscript.Colors)
