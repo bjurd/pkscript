@@ -20,7 +20,7 @@ end
 function PANEL:SetBarHeight(Height)
 	self.m_iBarHeight = tonumber(Height) or 24
 
-	self:DockPadding(1, self:GetBarHeight(), 1, 1)
+	self:DockPadding(1, self:GetBarHeight(), 1, 0)
 end
 
 function PANEL:SetupChild(Child)
