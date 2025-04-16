@@ -102,5 +102,6 @@ function Menu.UnRegister()
 end
 
 pkscript.Hooks.Register("PKScript:Unload", Menu.UnRegister)
+pkscript.Hooks.Register("OnScreenSizeChanged", Menu.Destroy)
 
 concommand.Add("pkscript_menu", Menu.Toggle)
