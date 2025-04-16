@@ -4,15 +4,18 @@ local Misc = pkscript.Miscellaneous
 Misc.Config = Misc.Config or {}
 local Config = Misc.Config
 
-Config.Cleanup = pkscript.Util.ConfigDefault(Config.Cleanup, false)
+Config.AutoCleanup = Config.AutoCleanup or {}
+Config.AutoCleanup.Enabled = pkscript.Util.ConfigDefault(Config.AutoCleanup.Enabled, false)
+Config.AutoCleanup.OnDeath = pkscript.Util.ConfigDefault(Config.AutoCleanup.OnDeath, false)
+Config.AutoCleanup.OnRelease = pkscript.Util.ConfigDefault(Config.AutoCleanup.OnRelease, false)
 
-do
+do -- Auto Cleanup
 	local AliveLast
 
-	function Misc.Cleanup(Command)
+	function Misc.AutoCleanupOnDeath(Command)
 		local Alive = pkscript.LocalPlayer:Alive()
 
-		if Config.Cleanup then
+		if Config.AutoCleanup.Enabled and Config.AutoCleanup.OnDeath then
 			if not Alive and AliveLast then
 				pkscript.LocalPlayer:ConCommand("gmod_cleanup")
 			end
@@ -20,10 +23,17 @@ do
 
 		AliveLast = Alive
 	end
+
+	function Misc.AutoCleanupOnRelease(Player, Entity)
+		if not Config.AutoCleanup.Enabled or not Config.AutoCleanup.OnRelease then
+			return
+		end
+
+		if Player == pkscript.LocalPlayer then -- TODO: Only remove the prop released? I don't this is possible :(
+			pkscript.LocalPlayer:ConCommand("gmod_cleanup")
+		end
+	end
 end
 
-function Misc.CreateMove(Command)
-	Misc.Cleanup(Command)
-end
-
-pkscript.Hooks.Register("CreateMove", Misc.CreateMove)
+pkscript.Hooks.Register("CreateMove", Misc.AutoCleanupOnDeath)
+pkscript.Hooks.Register("PhysgunDrop", Misc.AutoCleanupOnRelease)
