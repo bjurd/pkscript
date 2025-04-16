@@ -27,4 +27,8 @@ function Menu.Build()
 	local PropESP = Visuals:AddSubOption("Prop ESP")
 	PropESP:AddSubOption("Enabled", pkscript.Visuals.Config.PropESP, "Enabled", TYPE_BOOL)
 	PropESP:AddSubOption("Bounding Boxes", pkscript.Visuals.Config.PropESP, "Bounds", TYPE_BOOL)
+
+	ColoredModels = PropESP:AddSubOption("Colored Models")
+	ColoredModels:AddSubOption("Enabled", pkscript.Visuals.Config.PropESP.ColoredModels, "Enabled", TYPE_BOOL)
+	ColoredModels:AddSubOption("Ignore Z", pkscript.Visuals.Config.PropESP.ColoredModels, "IgnoreZ", TYPE_BOOL)
 end

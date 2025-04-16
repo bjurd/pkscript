@@ -4,6 +4,12 @@ local Visuals = pkscript.Visuals
 Visuals.EntityCache = {} -- Force empty these
 Visuals.EntityCacheKeys = {}
 
+Visuals.EntityClasses = Visuals.EntityClasses or {
+	["player"] = true,
+	["prop_physics"] = true,
+	["prop_dynamic"] = true
+}
+
 Visuals.Config = Visuals.Config or {}
 local Config = Visuals.Config
 
@@ -28,6 +34,10 @@ Config.PlayerESP.ColoredModels.IgnoreZ = pkscript.Util.ConfigDefault(Config.Play
 Config.PropESP = Config.PropESP or {}
 Config.PropESP.Enabled = pkscript.Util.ConfigDefault(Config.PropESP.Enabled, true)
 Config.PropESP.Bounds = pkscript.Util.ConfigDefault(Config.PropESP.Bounds, true) -- Actually hitboxes because props are dumb
+
+Config.PropESP.ColoredModels = Config.PropESP.ColoredModels or {}
+Config.PropESP.ColoredModels.Enabled = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Enabled, true)
+Config.PropESP.ColoredModels.IgnoreZ = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.IgnoreZ, false)
 
 function Visuals.SortEntities(A, B)
 	return A:GetPos():DistToSqr(Visuals.LocalPlayerPos) > B:GetPos():DistToSqr(Visuals.LocalPlayerPos)
@@ -203,6 +213,26 @@ function Visuals.PlayerESP3D(Player)
 	end
 end
 
+function Visuals.PropRenderOverride(Prop, Flags)
+	if bit.band(Flags, STUDIO_RENDER) ~= STUDIO_RENDER then return end
+
+	if not Config.PropESP.Enabled then
+		Prop:DrawModel()
+		return
+	end
+
+	if Config.PropESP.ColoredModels.IgnoreZ then
+		cam.IgnoreZ(true)
+	end
+
+	render.MaterialOverride(Config.Materials.Flat)
+
+	Prop:DrawModel()
+
+	render.MaterialOverride(nil)
+	cam.IgnoreZ(false)
+end
+
 function Visuals.PropESP3D(Prop)
 	if not Config.PropESP.Enabled then return end
 
@@ -244,6 +274,13 @@ function Visuals.PropESP3D(Prop)
 			render.DrawWireframeBox(Prop:GetPos(), Prop:GetAngles(), Mins, Maxs, color_white, false)
 		end
 	end
+
+	if Config.PropESP.ColoredModels.Enabled then
+		Prop.RenderOverride = Visuals.PropRenderOverride
+	else
+		-- TODO: This has the possibility to break some things
+		Prop.RenderOverride = nil
+	end
 end
 
 function Visuals.ESP3D()
@@ -278,7 +315,7 @@ end
 function Visuals.CacheEntity(Entity)
 	if Visuals.EntityCacheKeys[Entity] then return end
 
-	if Entity:IsPlayer() or Entity:GetClass() == "prop_physics" then -- TODO: Expand upon this with table
+	if Visuals.EntityClasses[Entity:GetClass()] then
 		Visuals.EntityCacheKeys[Entity] = table.insert(Visuals.EntityCache, Entity)
 	end
 end
