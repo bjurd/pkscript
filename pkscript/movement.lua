@@ -66,6 +66,8 @@ end
 function Movement.QuickStop(Command)
 	if not Config.QuickStop then return end
 
+	if Command:KeyDown(IN_JUMP) then return end -- Assume bhopping, ignore
+
 	if pkscript.LocalPlayer:IsOnGround() and Command:GetForwardMove() == 0 and Command:GetSideMove() == 0 then
 		local Velocity = pkscript.LocalPlayer:GetVelocity()
 
