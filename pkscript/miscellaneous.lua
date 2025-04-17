@@ -31,7 +31,16 @@ function Misc.PropWillCollide(Prop, Entity)
 	local FuturePos = Vector(PropPos)
 	FuturePos:Add(PropVel)
 
+	local Distance = FuturePos:DistToSqr(Entity:GetPos())
+	local Radius = Prop:BoundingRadius() + Entity:BoundingRadius()
+
+	if Distance <= Radius * Radius then
+		return true
+	end
+
+	-- TODO: This isn't that great because hull traces can't be rotated.....
 	local TraceData = pkscript.Util.ResetTrace()
+
 	TraceData.start = PropPos
 	TraceData.endpos = FuturePos
 	TraceData.mins, TraceData.maxs = Prop:GetCollisionBounds()
@@ -39,15 +48,7 @@ function Misc.PropWillCollide(Prop, Entity)
 	TraceData.whitelist = true
 	TraceData.ignoreworld = true
 
-	if pkscript.Util.RunTrace().Entity == pkscript.LocalPlayer then -- TODO: This isn't that great because hull traces can't be rotated.....
-		return true
-	end
-
-	-- Fallback
-	local Distance = FuturePos:DistToSqr(Entity:GetPos())
-	local Radius = Prop:BoundingRadius() + Entity:BoundingRadius()
-
-	return Distance <= Radius * Radius
+	return pkscript.Util.RunTrace().Entity == pkscript.LocalPlayer
 end
 
 do -- Auto Cleanup
