@@ -91,6 +91,17 @@ Config.Viewmodel.Weapon.Fullbright = pkscript.Util.ConfigDefault(Config.Viewmode
 Config.World = Config.World or {}
 Config.World.Nightmode = pkscript.Util.ConfigDefault(Config.World.Nightmode, false)
 
+Config.World.FOVChanger = Config.World.FOVChanger or {}
+
+Config.World.FOVChanger.Sizes = Config.World.FOVChanger.Sizes or {}
+Config.World.FOVChanger.Sizes.Small = 54
+Config.World.FOVChanger.Sizes.Normal = -1
+Config.World.FOVChanger.Sizes.Big = 120
+Config.World.FOVChanger.Sizes.Bigger = 160
+
+Config.World.FOVChanger.Size = pkscript.Util.ConfigDefault(Config.World.FOVChanger.Size, "Normal")
+Config.World.FOVChanger.Static = pkscript.Util.ConfigDefault(Config.World.FOVChanger.Static, false)
+
 function Visuals.SortEntities(A, B)
 	return A:GetPos():DistToSqr(Visuals.LocalPlayerPos) > B:GetPos():DistToSqr(Visuals.LocalPlayerPos)
 end
@@ -496,6 +507,30 @@ do -- Nightmode
 	end
 end
 
+do
+	local View = {}
+
+	function Visuals.FOVChanger(_, Origin, Angles, FOV, ZNear, ZFar)
+		local Size = Config.World.FOVChanger.Sizes[Config.World.FOVChanger.Size]
+		if Size == -1 then return end
+
+		if Config.World.FOVChanger.Static then
+			FOV = Size
+		else
+			local Offset = pkscript.ConVars.fov_desired:GetInt() - Size
+			FOV = FOV - Offset
+		end
+
+		View.origin = Origin
+		View.angles = Angles
+		View.fov = FOV
+		View.znear = ZNear
+		View.zfar = ZFar
+
+		return View
+	end
+end
+
 function Visuals.PrepareEntityCache()
 	Visuals.CurrentEntities = {}
 
@@ -547,6 +582,7 @@ pkscript.Hooks.Register("PostDrawViewModel", Visuals.PostDrawViewModel)
 pkscript.Hooks.Register("PreDrawPlayerHands", Visuals.PreDrawPlayerHands)
 pkscript.Hooks.Register("PostDrawPlayerHands", Visuals.PostDrawPlayerHands)
 pkscript.Hooks.Register("RenderScene", Visuals.Nightmode)
+pkscript.Hooks.Register("CalcView", Visuals.FOVChanger)
 pkscript.Hooks.Register("OnEntityCreated", Visuals.CacheEntity)
 pkscript.Hooks.Register("NetworkEntityCreated", Visuals.CacheEntity) -- Should be unnecessary, but doesn't hurt
 pkscript.Hooks.Register("EntityRemoved", Visuals.UnCacheEntity)

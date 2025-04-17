@@ -62,6 +62,14 @@ function Menu.Build()
 	local World = Visuals:AddSubOption("World")
 	World:AddSubOption("Night Mode", pkscript.Visuals.Config.World, "Nightmode", TYPE_BOOL)
 
+	local FOVChanger = World:AddSubOption("FOV Changer")
+
+	local FOVSizes = table.GetKeys(pkscript.Visuals.Config.World.FOVChanger.Sizes)
+	table.sort(FOVSizes)
+
+	FOVChanger:AddSubOption("Static", pkscript.Visuals.Config.World.FOVChanger, "Static", TYPE_BOOL)
+	FOVChanger:AddDropdown("Size", pkscript.Visuals.Config.World.FOVChanger, "Size", FOVSizes)
+
 	local Misc = Instance:AddOption("Miscellaneous")
 
 	local AutoCleanup = Misc:AddSubOption("Auto Cleanup")
