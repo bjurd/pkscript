@@ -34,13 +34,13 @@ Config.Materials.Glow = CreateMaterial("pkscript_Glow", "VertexLitGeneric", {
 })
 
 Config.Materials.Jellyfish = CreateMaterial("pkscript_Jellyfish", "jellyfish", {
-	["$basetexture"] = "Models/effects/vol_light001",
+	["$basetexture"] = "models/effects/vol_light001",
 	["$gradienttexture"] = "effects/bluelaser1",
 	["$pulserate"] = 0.5
 })
 
 Config.Materials["Jellyfish (Static)"] = CreateMaterial("pkscript_StaticJellyfish", "jellyfish", {
-	["$basetexture"] = "Models/effects/vol_light001",
+	["$basetexture"] = "models/effects/vol_light001",
 	["$gradienttexture"] = "effects/bluelaser1"
 })
 
@@ -57,6 +57,7 @@ Config.PlayerESP.ColoredModels.Material = pkscript.Util.ConfigDefault(Config.Pla
 Config.PlayerESP.ColoredModels.Color = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Color, "White")
 Config.PlayerESP.ColoredModels.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Enabled, false)
 Config.PlayerESP.ColoredModels.IgnoreZ = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.IgnoreZ, false)
+Config.PlayerESP.ColoredModels.Fullbright = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Fullbright, false)
 
 -- Props
 Config.PropESP = Config.PropESP or {}
@@ -68,6 +69,7 @@ Config.PropESP.ColoredModels.Material = pkscript.Util.ConfigDefault(Config.PropE
 Config.PropESP.ColoredModels.Color = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Color, "White")
 Config.PropESP.ColoredModels.Enabled = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Enabled, true)
 Config.PropESP.ColoredModels.IgnoreZ = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.IgnoreZ, false)
+Config.PropESP.ColoredModels.Fullbright = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Fullbright, false)
 
 -- Viewmodel
 Config.Viewmodel = Config.Viewmodel or {}
@@ -77,11 +79,13 @@ Config.Viewmodel.Hands = Config.Viewmodel.Hands or {}
 Config.Viewmodel.Hands.Material = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Material, "Flat")
 Config.Viewmodel.Hands.Color = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Color, "White")
 Config.Viewmodel.Hands.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Enabled, false)
+Config.Viewmodel.Hands.Fullbright = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Fullbright, false)
 
 Config.Viewmodel.Weapon = Config.Viewmodel.Weapon or {}
 Config.Viewmodel.Weapon.Material = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Material, "Flat")
 Config.Viewmodel.Weapon.Color = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Color, "White")
 Config.Viewmodel.Weapon.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Enabled, false)
+Config.Viewmodel.Weapon.Fullbright = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Fullbright, false)
 
 -- World
 Config.World = Config.World or {}
@@ -235,11 +239,11 @@ function Visuals.PlayerRenderOverride(Player, Flags) -- Always runs if Colored M
 
 	local Material = Config.Materials[Config.PlayerESP.ColoredModels.Material]
 
-	if Material == Config.Materials.Glow then
+	if Config.PlayerESP.ColoredModels.Fullbright then
 		render.SuppressEngineLighting(true)
 	end
 
-	render.MaterialOverride(Material)
+	render.MaterialOverride(Config.Materials[Config.PlayerESP.ColoredModels.Material])
 
 	local Color = pkscript.Colors[Config.PlayerESP.ColoredModels.Color]
 	render.SetColorModulation(Color.r / 255, Color.g / 255, Color.b / 255)
@@ -285,13 +289,11 @@ function Visuals.PropRenderOverride(Prop, Flags)
 		cam.IgnoreZ(true)
 	end
 
-	local Material = Config.Materials[Config.PropESP.ColoredModels.Material]
-
-	if Material == Config.Materials.Glow then
+	if Config.PropESP.ColoredModels.Fullbright then
 		render.SuppressEngineLighting(true)
 	end
 
-	render.MaterialOverride(Material)
+	render.MaterialOverride(Config.Materials[Config.PropESP.ColoredModels.Material])
 
 	local Color = pkscript.Colors[Config.PropESP.ColoredModels.Color]
 	render.SetColorModulation(Color.r / 255, Color.g / 255, Color.b / 255)
@@ -377,13 +379,11 @@ function Visuals.PreDrawViewModel()
 		return
 	end
 
-	local Material = Config.Materials[Config.Viewmodel.Weapon.Material]
-
-	if Material == Config.Materials.Glow then
+	if Config.Viewmodel.Weapon.Fullbright then
 		render.SuppressEngineLighting(true)
 	end
 
-	render.MaterialOverride(Material)
+	render.MaterialOverride(Config.Materials[Config.Viewmodel.Weapon.Material])
 
 	local Color = pkscript.Colors[Config.Viewmodel.Weapon.Color]
 	render.SetColorModulation(Color.r / 255, Color.g / 255, Color.b / 255)
@@ -411,13 +411,11 @@ function Visuals.PreDrawPlayerHands()
 		return
 	end
 
-	local Material = Config.Materials[Config.Viewmodel.Hands.Material]
-
-	if Material == Config.Materials.Glow then
+	if Config.Viewmodel.Hands.Fullbright then
 		render.SuppressEngineLighting(true)
 	end
 
-	render.MaterialOverride(Material)
+	render.MaterialOverride(Config.Materials[Config.Viewmodel.Hands.Material])
 
 	local Color = pkscript.Colors[Config.Viewmodel.Hands.Color]
 	render.SetColorModulation(Color.r / 255, Color.g / 255, Color.b / 255)
