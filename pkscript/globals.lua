@@ -1,4 +1,6 @@
 pkscript.LocalPlayer = LocalPlayer()
+pkscript.TickInterval = engine.TickInterval()
+pkscript.InverseTickInterval = 1 / pkscript.TickInterval
 
 pkscript.Colors = pkscript.Colors or {}
 pkscript.Colors.White = Color(255, 255, 255, 255)

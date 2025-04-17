@@ -23,13 +23,28 @@ function Misc.PropHeadingTowards(Prop, Entity)
 end
 
 function Misc.PropWillCollide(Prop, Entity)
-	local PropVel = Prop:GetVelocity()
-	PropVel:Mul(0.1)
+	local PropVel = Prop:GetVelocity() -- TODO: Add some math with ping to help it not suck with poor connection
+	PropVel:Mul(pkscript.TickInterval)
+	PropVel:Mul(pkscript.InverseTickInterval / 10) -- 1/10 of a second ahead
 
 	local PropPos = Prop:GetPos()
-	PropPos:Add(PropVel)
+	local FuturePos = Vector(PropPos)
+	FuturePos:Add(PropVel)
 
-	local Distance = PropPos:DistToSqr(Entity:GetPos())
+	local TraceData = pkscript.Util.ResetTrace()
+	TraceData.start = PropPos
+	TraceData.endpos = FuturePos
+	TraceData.mins, TraceData.maxs = Prop:GetCollisionBounds()
+	TraceData.filter = { pkscript.LocalPlayer } -- Whitelist only works if it's a table :/
+	TraceData.whitelist = true
+	TraceData.ignoreworld = true
+
+	if pkscript.Util.RunTrace().Entity == pkscript.LocalPlayer then -- TODO: This isn't that great because hull traces can't be rotated.....
+		return true
+	end
+
+	-- Fallback
+	local Distance = FuturePos:DistToSqr(Entity:GetPos())
 	local Radius = Prop:BoundingRadius() + Entity:BoundingRadius()
 
 	return Distance <= Radius * Radius
@@ -89,12 +104,12 @@ function Misc.AutoSuicide(Command)
 		local Entity = EntityCache[i]
 		if Entity == Holding then continue end -- Don't suicide while propflying
 
-		if Entity:GetClass() == "prop_physics" then
-			if Misc.PropHeadingTowards(Entity, pkscript.LocalPlayer) and Misc.PropWillCollide(Entity, pkscript.LocalPlayer) then
-				if not Entity.pkscript_AutoCleanup then -- Don't suicide if we just let it go
-					pkscript.LocalPlayer:ConCommand("kill")
-				end
-			end
+		if Entity:GetClass() ~= "prop_physics" then continue end
+		if not Misc.PropHeadingTowards(Entity, pkscript.LocalPlayer) then continue end
+		if not Misc.PropWillCollide(Entity, pkscript.LocalPlayer) then continue end
+
+		if not Entity.pkscript_AutoCleanup then -- Don't suicide if we just let it go, it will be removed (Though this is partially dependent on ping)
+			pkscript.LocalPlayer:ConCommand("kill")
 		end
 	end
 end
