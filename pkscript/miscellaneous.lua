@@ -9,7 +9,7 @@ Config.AutoCleanup.Enabled = pkscript.Util.ConfigDefault(Config.AutoCleanup.Enab
 Config.AutoCleanup.OnDeath = pkscript.Util.ConfigDefault(Config.AutoCleanup.OnDeath, false)
 Config.AutoCleanup.OnRelease = pkscript.Util.ConfigDefault(Config.AutoCleanup.OnRelease, true)
 
-Config.AutoSuicide = pkscript.Util.ConfigDefault(Config.AutoSuicide, true)
+Config.AutoSuicide = pkscript.Util.ConfigDefault(Config.AutoSuicide, false)
 
 function Misc.PropHeadingTowards(Prop, Entity)
 	local ToEntity = Entity:GetPos()
