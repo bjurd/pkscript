@@ -14,3 +14,5 @@ pkscript.Colors.Purple = Color(100, 0, 255, 255)
 pkscript.ConVars = pkscript.ConVars or {}
 pkscript.ConVars.cl_sidespeed = GetConVar("cl_sidespeed")
 pkscript.ConVars.cl_forwardspeed = GetConVar("cl_forwardspeed")
+
+pkscript.GlobalCache = pkscript.GlobalCache or {}

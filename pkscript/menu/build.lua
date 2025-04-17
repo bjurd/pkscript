@@ -55,6 +55,9 @@ function Menu.Build()
 	Weapon:AddDropdown("Material", pkscript.Visuals.Config.Viewmodel.Weapon, "Material", Materials)
 	Weapon:AddDropdown("Color", pkscript.Visuals.Config.Viewmodel.Weapon, "Color", Colors)
 
+	local World = Visuals:AddSubOption("World")
+	World:AddSubOption("Night Mode", pkscript.Visuals.Config.World, "Nightmode", TYPE_BOOL)
+
 	local Misc = Instance:AddOption("Miscellaneous")
 
 	local AutoCleanup = Misc:AddSubOption("Auto Cleanup")

@@ -71,6 +71,10 @@ Config.Viewmodel.Weapon.Material = pkscript.Util.ConfigDefault(Config.Viewmodel.
 Config.Viewmodel.Weapon.Color = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Color, "White")
 Config.Viewmodel.Weapon.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Enabled, false)
 
+-- World
+Config.World = Config.World or {}
+Config.World.Nightmode = pkscript.Util.ConfigDefault(Config.World.Nightmode, false)
+
 function Visuals.SortEntities(A, B)
 	return A:GetPos():DistToSqr(Visuals.LocalPlayerPos) > B:GetPos():DistToSqr(Visuals.LocalPlayerPos)
 end
@@ -419,6 +423,69 @@ function Visuals.PostDrawPlayerHands()
 	render.SuppressEngineLighting(false)
 end
 
+do -- Nightmode
+	local LastState = Config.World.Nightmode
+	pkscript.GlobalCache.WorldMaterials = pkscript.GlobalCache.WorldMaterials or {}
+
+	local function Cache()
+		if not table.IsEmpty(pkscript.GlobalCache.WorldMaterials) then
+			return
+		end
+
+		local MaterialCache = pkscript.GlobalCache.WorldMaterials
+		local Materials = game.GetWorld():GetMaterials()
+
+		for i = 1, #Materials do
+			local Name = Materials[i]
+
+			if not MaterialCache[Name] then
+				MaterialCache[Name] = {}
+
+				local Material = Material(Name)
+
+				MaterialCache[Name].Material = Material
+				MaterialCache[Name].Color = Material:GetVector("$color")
+			end
+		end
+	end
+
+	local function Reset()
+		Cache()
+
+		for _, Data in next, pkscript.GlobalCache.WorldMaterials do
+			Data.Material:SetVector("$color", Data.Color)
+		end
+	end
+
+	local function Setup()
+		Cache()
+
+		local Dark = Color(50, 50, 50, 255):ToVector()
+
+		for _, Data in next, pkscript.GlobalCache.WorldMaterials do
+			Data.Material:SetVector("$color", Dark)
+		end
+	end
+
+	function Visuals.Nightmode()
+		if not Config.World.Nightmode then
+			if LastState then
+				Reset()
+			end
+
+			LastState = false
+
+			return
+		end
+
+		if not LastState then
+			Setup()
+		end
+
+		LastState = true
+	end
+end
+
 function Visuals.PrepareEntityCache()
 	Visuals.CurrentEntities = {}
 
@@ -469,6 +536,7 @@ pkscript.Hooks.Register("PreDrawViewModel", Visuals.PreDrawViewModel)
 pkscript.Hooks.Register("PostDrawViewModel", Visuals.PostDrawViewModel)
 pkscript.Hooks.Register("PreDrawPlayerHands", Visuals.PreDrawPlayerHands)
 pkscript.Hooks.Register("PostDrawPlayerHands", Visuals.PostDrawPlayerHands)
+pkscript.Hooks.Register("RenderScene", Visuals.Nightmode)
 pkscript.Hooks.Register("OnEntityCreated", Visuals.CacheEntity)
 pkscript.Hooks.Register("NetworkEntityCreated", Visuals.CacheEntity) -- Should be unnecessary, but doesn't hurt
 pkscript.Hooks.Register("EntityRemoved", Visuals.UnCacheEntity)
