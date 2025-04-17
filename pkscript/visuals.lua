@@ -20,6 +20,7 @@ Config.Fonts.Weapons = pkscript.Util.ConfigDefault(Config.Fonts.Weapons, "Defaul
 Config.Materials = Config.Materials or {}
 Config.Materials.Flat = Material("models/debug/debugwhite")
 Config.Materials.Shiny = Material("models/shiny")
+
 Config.Materials.Glow = CreateMaterial("pkscript_Glow", "VertexLitGeneric", {
 	["$basetexture"] = "vgui/white_additive",
 	["$bumpmap"] = "vgui/white_additive",
@@ -30,6 +31,17 @@ Config.Materials.Glow = CreateMaterial("pkscript_Glow", "VertexLitGeneric", {
 	["$selfillumFresnel"] = 1,
 	["$selfillumFresnelMinMaxExp"] = "[0 1 1]",
 	["$selfillumtint"] = "[0 0 0]"
+})
+
+Config.Materials.Jellyfish = CreateMaterial("pkscript_Jellyfish", "jellyfish", {
+	["$basetexture"] = "Models/effects/vol_light001",
+	["$gradienttexture"] = "effects/bluelaser1",
+	["$pulserate"] = 0.5
+})
+
+Config.Materials["Jellyfish (Static)"] = CreateMaterial("pkscript_StaticJellyfish", "jellyfish", {
+	["$basetexture"] = "Models/effects/vol_light001",
+	["$gradienttexture"] = "effects/bluelaser1"
 })
 
 -- Players
