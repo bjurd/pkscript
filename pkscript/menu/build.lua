@@ -61,4 +61,6 @@ function Menu.Build()
 	AutoCleanup:AddSubOption("Enabled", pkscript.Miscellaneous.Config.AutoCleanup, "Enabled", TYPE_BOOL)
 	AutoCleanup:AddSubOption("On Death", pkscript.Miscellaneous.Config.AutoCleanup, "OnDeath", TYPE_BOOL)
 	AutoCleanup:AddSubOption("On Release", pkscript.Miscellaneous.Config.AutoCleanup, "OnRelease", TYPE_BOOL)
+
+	Misc:AddSubOption("Auto Suicide", pkscript.Miscellaneous.Config, "AutoSuicide", TYPE_BOOL)
 end
