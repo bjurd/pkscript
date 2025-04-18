@@ -72,6 +72,7 @@ function Menu.Build()
 	table.sort(FOVSizes)
 
 	FOVChanger:AddSubOption("Static", pkscript.Visuals.Config.World.FOVChanger, "Static", TYPE_BOOL)
+	FOVChanger:AddSubOption("Scale Calculations", pkscript.Visuals.Config.World.FOVChanger, "ScaleCalculations", TYPE_BOOL)
 	FOVChanger:AddDropdown("Size", pkscript.Visuals.Config.World.FOVChanger, "Size", FOVSizes)
 
 	local Misc = Instance:AddOption("Miscellaneous")

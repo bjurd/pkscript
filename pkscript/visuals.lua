@@ -138,6 +138,7 @@ Config.World.Nightmode = pkscript.Util.ConfigDefault(Config.World.Nightmode, tru
 Config.World.FOVChanger = Config.World.FOVChanger or {}
 Config.World.FOVChanger.Size = pkscript.Util.ConfigDefault(Config.World.FOVChanger.Size, "Normal")
 Config.World.FOVChanger.Static = pkscript.Util.ConfigDefault(Config.World.FOVChanger.Static, false)
+Config.World.FOVChanger.ScaleCalculations = pkscript.Util.ConfigDefault(Config.World.FOVChanger.ScaleCalculations, true)
 
 Config.World.FOVChanger.Sizes = Config.World.FOVChanger.Sizes or {}
 Config.World.FOVChanger.Sizes.Small = 54
@@ -648,7 +649,9 @@ do
 		View.znear = ZNear
 		View.zfar = ZFar
 
-		Player:SetFOV(FOV) -- Set the FOV for clientside calculations (Like sensitivity)
+		if Config.World.FOVChanger.ScaleCalculations then
+			Player:SetFOV(FOV) -- Set the FOV for clientside calculations (Like sensitivity)
+		end
 
 		return View
 	end
