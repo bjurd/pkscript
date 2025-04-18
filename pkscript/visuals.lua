@@ -14,8 +14,8 @@ Visuals.Config = Visuals.Config or {}
 local Config = Visuals.Config
 
 Config.Fonts = Config.Fonts or {} -- TODO: No idea how to do this in a menu controlled by arrow keys
-Config.Fonts.NameTags = pkscript.Util.ConfigDefault(Config.Fonts.NameTags, "TargetID")
-Config.Fonts.Weapons = pkscript.Util.ConfigDefault(Config.Fonts.Weapons, "DefaultFixed")
+Config.Fonts.NameTags = pkscript.Util.ConfigDefault(Config.Fonts.NameTags, "TargetIDSmall")
+Config.Fonts.Weapons = pkscript.Util.ConfigDefault(Config.Fonts.Weapons, "DefaultVerySmall")
 Config.Fonts.DebugInfo = pkscript.Util.ConfigDefault(Config.Fonts.DebugInfo, "DebugOverlay")
 
 Config.Materials = Config.Materials or {}
@@ -205,8 +205,7 @@ function Visuals.PlayerESP2D(Player)
 
 		local CenterX = ((Left + Right) * 0.5) - (TextWidth * 0.5)
 
-		surface.SetTextPos(CenterX, Top - TextHeight)
-		surface.DrawText(Text)
+		draw.SimpleTextOutlined(Text, Config.Fonts.NameTags, CenterX, Top - TextHeight, surface.GetTextColor(), nil, nil, 1, color_black)
 	end
 
 	if Config.PlayerESP.Weapons then
@@ -220,12 +219,10 @@ function Visuals.PlayerESP2D(Player)
 
 			local CenterX = ((Left + Right) * 0.5) - (TextWidth * 0.5)
 
-			-- draw because this font has no outline :(
-			-- TODO: "Custom" fonts
 			draw.SimpleTextOutlined(Text, Config.Fonts.Weapons, CenterX, Bottom + TextHeight, surface.GetTextColor(), nil, nil, 1, color_black)
 
-			-- surface.SetTextPos(CenterX, Bottom + TextHeight)
-			-- surface.DrawText(Text)
+			--surface.SetTextPos(CenterX, Bottom + TextHeight)
+			--surface.DrawText(Text)
 		end
 	end
 
