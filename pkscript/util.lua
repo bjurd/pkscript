@@ -41,7 +41,7 @@ function pkscript.Util.RunTrace()
 end
 
 function pkscript.Util.AddressOf(Object)
-	if isentity(Object) and not Object:IsValid() then
+	if isentity(Object) and Object ~= game.GetWorld() and not Object:IsValid() then
 		return "0x00000000"
 	end
 
@@ -49,7 +49,7 @@ function pkscript.Util.AddressOf(Object)
 end
 
 function pkscript.Util.CallOnValid(Default, Object, FunctionName, ...)
-	if not IsValid(Object) then
+	if Object ~= game.GetWorld() and not IsValid(Object) then
 		return Default
 	end
 
