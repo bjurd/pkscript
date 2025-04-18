@@ -648,6 +648,8 @@ do
 		View.znear = ZNear
 		View.zfar = ZFar
 
+		Player:SetFOV(FOV) -- Set the FOV for clientside calculations (Like sensitivity)
+
 		return View
 	end
 end
