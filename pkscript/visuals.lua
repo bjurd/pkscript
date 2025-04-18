@@ -122,7 +122,9 @@ Network Time: %.4f
 Time Delta:   %.4f
 Time Scale:   %.2f
 
-Observing:    %s
+Look Entity:  <color=255,255,0,255>%s</color>
+Class Name:   %s
+Index:        %d
 Hitbox:       %d
 Texture:      %s
 Material:     %s
@@ -307,7 +309,9 @@ function Visuals.DebugInfo()
 		ServerTime - CurTime(),
 		game.GetTimeScale() * pkscript.ConVars.host_timescale:GetFloat(),
 
-		EyeTrace.Entity,
+		pkscript.Util.AddressOf(EyeTrace.Entity),
+		pkscript.Util.CallOnValid("N/A", EyeTrace.Entity, "GetClass"),
+		pkscript.Util.CallOnValid(0, EyeTrace.Entity, "EntIndex"),
 		EyeTrace.HitGroup,
 		EyeTrace.HitTexture,
 		EyeTrace.MatType
