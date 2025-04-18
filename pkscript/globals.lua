@@ -15,5 +15,6 @@ pkscript.ConVars = pkscript.ConVars or {}
 pkscript.ConVars.cl_sidespeed = GetConVar("cl_sidespeed")
 pkscript.ConVars.cl_forwardspeed = GetConVar("cl_forwardspeed")
 pkscript.ConVars.fov_desired = GetConVar("fov_desired")
+pkscript.ConVars.host_timescale = GetConVar("host_timescale")
 
 pkscript.GlobalCache = pkscript.GlobalCache or {}

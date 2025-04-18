@@ -97,6 +97,8 @@ Config.HUD.DebugInfo.Enabled = pkscript.Util.ConfigDefault(Config.HUD.DebugInfo.
 
 Config.HUD.DebugInfo.Markup = [[
 <font=%s>
+Frame Rate:   %.0f
+Frame Time:   %.4f
 Lua Memory:   %s
 Entity Cache: %u
 
@@ -115,10 +117,10 @@ Secondary:    %s
 Server:       <color=0,150,255,255>%s</color>
 Ping:         %u ms
 Tick Rate:    %.1f / %.1f
-Frame Rate:   %.0f
 CurTime:      %.4f
 Network Time: %.4f
 Time Delta:   %.4f
+Time Scale:   %.2f
 
 Observing:    %s
 Hitbox:       %d
@@ -270,6 +272,7 @@ function Visuals.DebugInfo()
 	local NextSecondaryFire = pkscript.Util.CallOnValid(math.huge, Weapon, "GetNextSecondaryFire")
 
 	local ServerTime = pkscript.Util.GetServerTime()
+	local FrameTime = RealFrameTime()
 
 	local EyeTrace = pkscript.LocalPlayer:GetEyeTrace()
 
@@ -278,6 +281,8 @@ function Visuals.DebugInfo()
 
 		Config.Fonts.DebugInfo,
 
+		1 / FrameTime,
+		FrameTime,
 		string.NiceSize(collectgarbage("count")),
 		#Visuals.EntityCache,
 
@@ -297,10 +302,10 @@ function Visuals.DebugInfo()
 		pkscript.LocalPlayer:Ping(),
 		math.Clamp(1 / engine.ServerFrameTime(), 0, pkscript.InverseTickInterval),
 		pkscript.InverseTickInterval,
-		1 / RealFrameTime(),
 		CurTime(),
 		ServerTime,
 		ServerTime - CurTime(),
+		game.GetTimeScale() * pkscript.ConVars.host_timescale:GetFloat(),
 
 		EyeTrace.Entity,
 		EyeTrace.HitGroup,
