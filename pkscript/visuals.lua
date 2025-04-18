@@ -97,6 +97,9 @@ Config.HUD.DebugInfo.Enabled = pkscript.Util.ConfigDefault(Config.HUD.DebugInfo.
 
 Config.HUD.DebugInfo.Markup = [[
 <font=%s>
+Lua Memory:   %s
+Entity Cache: %u
+
 LocalPlayer:  <color=255,255,0,255>%s</color>
 Health:       %d
 Armor:        %d
@@ -110,8 +113,6 @@ Server:       <color=0,150,255,255>%s</color>
 Ping:         %u ms
 Tick Rate:    %.1f / %.1f
 Frame Rate:   %.0f
-Entity Cache: %u
-Lua Memory:   %s
 
 Observing:    %s
 Hitbox:       %d
@@ -265,6 +266,9 @@ function Visuals.DebugInfo()
 
 		Config.Fonts.DebugInfo,
 
+		string.NiceSize(collectgarbage("count")),
+		#Visuals.EntityCache,
+
 		pkscript.Util.AddressOf(pkscript.LocalPlayer),
 		pkscript.LocalPlayer:Health(),
 		pkscript.LocalPlayer:Armor(),
@@ -279,8 +283,6 @@ function Visuals.DebugInfo()
 		math.Clamp(1 / engine.ServerFrameTime(), 0, pkscript.InverseTickInterval),
 		pkscript.InverseTickInterval,
 		1 / RealFrameTime(),
-		#Visuals.EntityCache,
-		string.NiceSize(collectgarbage("count")),
 
 		EyeTrace.Entity,
 		EyeTrace.HitGroup,
