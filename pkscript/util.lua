@@ -75,3 +75,7 @@ function pkscript.Util.MarkupBool(Bool)
 		pkscript.Util.BoolToString(Bool)
 	)
 end
+
+function pkscript.Util.ASCIIFilter(String)
+	return string.gsub(String, "[^\32-\126]", "?")
+end

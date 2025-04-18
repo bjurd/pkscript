@@ -49,6 +49,7 @@ Config.Materials["Jellyfish (Static)"] = CreateMaterial("pkscript_StaticJellyfis
 Config.PlayerESP = Config.PlayerESP or {}
 Config.PlayerESP.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.Enabled, true)
 Config.PlayerESP.NameTags = pkscript.Util.ConfigDefault(Config.PlayerESP.NameTags, true)
+Config.PlayerESP.FilterNameTags = pkscript.Util.ConfigDefault(Config.PlayerESP.FilterNameTags, true)
 Config.PlayerESP.Weapons = pkscript.Util.ConfigDefault(Config.PlayerESP.Weapons, true)
 Config.PlayerESP.Health = pkscript.Util.ConfigDefault(Config.PlayerESP.Health, false)
 Config.PlayerESP.Bounds = pkscript.Util.ConfigDefault(Config.PlayerESP.Bounds, false)
@@ -195,6 +196,11 @@ function Visuals.PlayerESP2D(Player)
 		surface.SetFont(Config.Fonts.NameTags)
 
 		Text = Player:GetName()
+
+		if Config.PlayerESP.FilterNameTags then
+			Text = pkscript.Util.ASCIIFilter(Text)
+		end
+
 		TextWidth, TextHeight = surface.GetTextSize(Text)
 
 		local CenterX = ((Left + Right) * 0.5) - (TextWidth * 0.5)
