@@ -594,9 +594,15 @@ end
 do
 	local View = {}
 
-	function Visuals.FOVChanger(_, Origin, Angles, FOV, ZNear, ZFar)
+	function Visuals.FOVChanger(Player, Origin, Angles, FOV, ZNear, ZFar)
 		local Size = Config.World.FOVChanger.Sizes[Config.World.FOVChanger.Size]
 		if Size == -1 then return end
+
+		local Weapon = Player:GetActiveWeapon()
+
+		if isfunction(Weapon.CalcView) then
+			Origin, Angles, FOV = Weapon:CalcView(Player, Origin, Angles, FOV)
+		end
 
 		if Config.World.FOVChanger.Static then
 			FOV = Size
