@@ -222,7 +222,7 @@ function Visuals.PlayerESP2D(Player)
 
 			-- draw because this font has no outline :(
 			-- TODO: "Custom" fonts
-			draw.SimpleTextOutlined(Text, Config.Fonts.Weapons, CenterX, Bottom + TextHeight, nil, nil, nil, 1, color_black)
+			draw.SimpleTextOutlined(Text, Config.Fonts.Weapons, CenterX, Bottom + TextHeight, surface.GetTextColor(), nil, nil, 1, color_black)
 
 			-- surface.SetTextPos(CenterX, Bottom + TextHeight)
 			-- surface.DrawText(Text)
@@ -322,6 +322,7 @@ end
 
 function Visuals.PlayerRenderOverride(Player, Flags) -- Always runs if Colored Models are enabled, no need to check it here
 	if bit.band(Flags, STUDIO_RENDER) ~= STUDIO_RENDER then return end
+	if Player:IsDormant() then return end
 
 	if not Config.PlayerESP.Enabled then -- In case ESP was disabled but Colored Models werent
 		Player:DrawModel()
@@ -357,6 +358,7 @@ function Visuals.PlayerESP3D(Player)
 	if Player == pkscript.LocalPlayer then return end -- TODO: LocalPlayer options ?
 
 	if not Player:Alive() then return end
+	if Player:IsDormant() then return end
 
 	if Config.PlayerESP.Bounds then
 		local Mins, Maxs = Player:GetCollisionBounds()
@@ -374,6 +376,7 @@ end
 
 function Visuals.PropRenderOverride(Prop, Flags)
 	if bit.band(Flags, STUDIO_RENDER) ~= STUDIO_RENDER then return end
+	if Prop:IsDormant() then return end
 
 	if not Config.PropESP.Enabled then
 		Prop:DrawModel()
@@ -404,6 +407,8 @@ end
 
 function Visuals.PropESP3D(Prop)
 	if not Config.PropESP.Enabled then return end
+
+	if Prop:IsDormant() then return end
 
 	if Config.PropESP.Bounds then
 		local DrewHitboxes = false
