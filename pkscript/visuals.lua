@@ -92,7 +92,7 @@ Config.Viewmodel.Weapon.Fullbright = pkscript.Util.ConfigDefault(Config.Viewmode
 Config.HUD = Config.HUD or {}
 
 Config.HUD.DebugInfo = Config.HUD.DebugInfo or {}
-Config.HUD.DebugInfo.Enabled = pkscript.Util.ConfigDefault(Config.HUD.DebugInfo.Enabled, true)
+Config.HUD.DebugInfo.Enabled = pkscript.Util.ConfigDefault(Config.HUD.DebugInfo.Enabled, false)
 
 Config.HUD.DebugInfo.Markup = [[
 <font=%s>
