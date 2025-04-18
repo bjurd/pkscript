@@ -50,7 +50,7 @@ Config.PlayerESP = Config.PlayerESP or {}
 Config.PlayerESP.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.Enabled, true)
 Config.PlayerESP.NameTags = pkscript.Util.ConfigDefault(Config.PlayerESP.NameTags, true)
 Config.PlayerESP.FilterNameTags = pkscript.Util.ConfigDefault(Config.PlayerESP.FilterNameTags, true)
-Config.PlayerESP.Weapons = pkscript.Util.ConfigDefault(Config.PlayerESP.Weapons, true)
+Config.PlayerESP.Weapons = pkscript.Util.ConfigDefault(Config.PlayerESP.Weapons, false)
 Config.PlayerESP.Health = pkscript.Util.ConfigDefault(Config.PlayerESP.Health, false)
 Config.PlayerESP.Bounds = pkscript.Util.ConfigDefault(Config.PlayerESP.Bounds, false)
 
@@ -68,25 +68,25 @@ Config.PropESP.Bounds = pkscript.Util.ConfigDefault(Config.PropESP.Bounds, true)
 
 Config.PropESP.ColoredModels = Config.PropESP.ColoredModels or {}
 Config.PropESP.ColoredModels.Material = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Material, "Flat")
-Config.PropESP.ColoredModels.Color = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Color, "White")
+Config.PropESP.ColoredModels.Color = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Color, "Blue")
 Config.PropESP.ColoredModels.Enabled = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Enabled, true)
 Config.PropESP.ColoredModels.IgnoreZ = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.IgnoreZ, false)
 Config.PropESP.ColoredModels.Fullbright = pkscript.Util.ConfigDefault(Config.PropESP.ColoredModels.Fullbright, false)
 
 -- Viewmodel
 Config.Viewmodel = Config.Viewmodel or {}
-Config.Viewmodel.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Enabled, false)
+Config.Viewmodel.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Enabled, true)
 
 Config.Viewmodel.Hands = Config.Viewmodel.Hands or {}
-Config.Viewmodel.Hands.Material = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Material, "Flat")
-Config.Viewmodel.Hands.Color = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Color, "White")
-Config.Viewmodel.Hands.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Enabled, false)
-Config.Viewmodel.Hands.Fullbright = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Fullbright, false)
+Config.Viewmodel.Hands.Material = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Material, "Shiny")
+Config.Viewmodel.Hands.Color = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Color, "Purple")
+Config.Viewmodel.Hands.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Enabled, true)
+Config.Viewmodel.Hands.Fullbright = pkscript.Util.ConfigDefault(Config.Viewmodel.Hands.Fullbright, true)
 
 Config.Viewmodel.Weapon = Config.Viewmodel.Weapon or {}
-Config.Viewmodel.Weapon.Material = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Material, "Flat")
+Config.Viewmodel.Weapon.Material = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Material, "Jellyfish")
 Config.Viewmodel.Weapon.Color = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Color, "White")
-Config.Viewmodel.Weapon.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Enabled, false)
+Config.Viewmodel.Weapon.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Enabled, true)
 Config.Viewmodel.Weapon.Fullbright = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Fullbright, false)
 
 -- HUD
@@ -129,7 +129,7 @@ Material:     %s
 
 -- World
 Config.World = Config.World or {}
-Config.World.Nightmode = pkscript.Util.ConfigDefault(Config.World.Nightmode, false)
+Config.World.Nightmode = pkscript.Util.ConfigDefault(Config.World.Nightmode, true)
 
 Config.World.FOVChanger = Config.World.FOVChanger or {}
 Config.World.FOVChanger.Size = pkscript.Util.ConfigDefault(Config.World.FOVChanger.Size, "Normal")
@@ -551,7 +551,7 @@ function Visuals.PostDrawPlayerHands()
 end
 
 do -- Nightmode
-	local LastState = Config.World.Nightmode
+	local LastState = false
 	pkscript.GlobalCache.WorldMaterials = pkscript.GlobalCache.WorldMaterials or {}
 
 	local function Cache()

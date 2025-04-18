@@ -5,9 +5,9 @@ Misc.Config = Misc.Config or {}
 local Config = Misc.Config
 
 Config.AutoCleanup = Config.AutoCleanup or {}
-Config.AutoCleanup.Enabled = pkscript.Util.ConfigDefault(Config.AutoCleanup.Enabled, true)
+Config.AutoCleanup.Enabled = pkscript.Util.ConfigDefault(Config.AutoCleanup.Enabled, false)
 Config.AutoCleanup.OnDeath = pkscript.Util.ConfigDefault(Config.AutoCleanup.OnDeath, false)
-Config.AutoCleanup.OnRelease = pkscript.Util.ConfigDefault(Config.AutoCleanup.OnRelease, true)
+Config.AutoCleanup.OnRelease = pkscript.Util.ConfigDefault(Config.AutoCleanup.OnRelease, false)
 
 Config.AutoSuicide = pkscript.Util.ConfigDefault(Config.AutoSuicide, false)
 

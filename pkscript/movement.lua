@@ -6,7 +6,7 @@ local Config = Movement.Config
 
 Config.AutoStrafe = pkscript.Util.ConfigDefault(Config.AutoStrafe, true) -- TODO: Make this modes instead of on/off
 Config.BunnyHop = pkscript.Util.ConfigDefault(Config.BunnyHop, true)
-Config.QuickStop = pkscript.Util.ConfigDefault(Config.QuickStop, true)
+Config.QuickStop = pkscript.Util.ConfigDefault(Config.QuickStop, false)
 
 do -- AutoStrafe
 	local LastFacing = pkscript.LocalPlayer:EyeAngles()
