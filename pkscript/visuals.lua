@@ -110,6 +110,7 @@ Ping:         %u ms
 Tick Rate:    %.1f / %.1f
 Frame Rate:   %.0f
 Entity Cache: %u
+Lua Memory:   %s
 
 Observing:    %s
 Hitbox:       %d
@@ -276,6 +277,7 @@ function Visuals.DebugInfo()
 		pkscript.InverseTickInterval,
 		1 / RealFrameTime(),
 		#Visuals.EntityCache,
+		string.NiceSize(collectgarbage("count")),
 
 		EyeTrace.Entity,
 		EyeTrace.HitGroup,
