@@ -16,6 +16,7 @@ local Config = Visuals.Config
 Config.Fonts = Config.Fonts or {} -- TODO: No idea how to do this in a menu controlled by arrow keys
 Config.Fonts.NameTags = pkscript.Util.ConfigDefault(Config.Fonts.NameTags, "TargetID")
 Config.Fonts.Weapons = pkscript.Util.ConfigDefault(Config.Fonts.Weapons, "DefaultFixed")
+Config.Fonts.DebugInfo = pkscript.Util.ConfigDefault(Config.Fonts.DebugInfo, "DebugOverlay")
 
 Config.Materials = Config.Materials or {}
 Config.Materials.Flat = Material("models/debug/debugwhite")
@@ -87,20 +88,49 @@ Config.Viewmodel.Weapon.Color = pkscript.Util.ConfigDefault(Config.Viewmodel.Wea
 Config.Viewmodel.Weapon.Enabled = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Enabled, false)
 Config.Viewmodel.Weapon.Fullbright = pkscript.Util.ConfigDefault(Config.Viewmodel.Weapon.Fullbright, false)
 
+-- HUD
+Config.HUD = Config.HUD or {}
+
+Config.HUD.DebugInfo = Config.HUD.DebugInfo or {}
+Config.HUD.DebugInfo.Enabled = pkscript.Util.ConfigDefault(Config.HUD.DebugInfo.Enabled, true)
+
+Config.HUD.DebugInfo.Markup = [[
+<font=%s>
+LocalPlayer:  <color=255,255,0,255>%s</color>
+Health:       %d
+Armor:        %d
+Velocity:     %.2f
+
+Weapon:       <color=255,255,0,255>%s</color>
+Display Name: %s
+Is Lua:       %s
+
+Server:       <color=0,150,255,255>%s</color>
+Ping:         %u ms
+Tick Rate:    %.1f / %.1f
+Frame Rate:   %.0f
+Entity Cache: %u
+
+Observing:    %s
+Hitbox:       %d
+Texture:      %s
+Material:     %s
+</font>
+]]
+
 -- World
 Config.World = Config.World or {}
 Config.World.Nightmode = pkscript.Util.ConfigDefault(Config.World.Nightmode, false)
 
 Config.World.FOVChanger = Config.World.FOVChanger or {}
+Config.World.FOVChanger.Size = pkscript.Util.ConfigDefault(Config.World.FOVChanger.Size, "Normal")
+Config.World.FOVChanger.Static = pkscript.Util.ConfigDefault(Config.World.FOVChanger.Static, false)
 
 Config.World.FOVChanger.Sizes = Config.World.FOVChanger.Sizes or {}
 Config.World.FOVChanger.Sizes.Small = 54
 Config.World.FOVChanger.Sizes.Normal = -1
 Config.World.FOVChanger.Sizes.Big = 120
 Config.World.FOVChanger.Sizes.Bigger = 160
-
-Config.World.FOVChanger.Size = pkscript.Util.ConfigDefault(Config.World.FOVChanger.Size, "Normal")
-Config.World.FOVChanger.Static = pkscript.Util.ConfigDefault(Config.World.FOVChanger.Static, false)
 
 function Visuals.SortEntities(A, B)
 	return A:GetPos():DistToSqr(Visuals.LocalPlayerPos) > B:GetPos():DistToSqr(Visuals.LocalPlayerPos)
@@ -178,7 +208,7 @@ function Visuals.PlayerESP2D(Player)
 		if IsValid(Weapon) and Weapon:IsWeapon() then -- Some addons are retarded :/
 			surface.SetFont(Config.Fonts.Weapons)
 
-			Text = Weapon:GetPrintName()
+			Text = language.GetPhrase(Weapon:GetPrintName())
 			TextWidth, TextHeight = surface.GetTextSize(Text)
 
 			local CenterX = ((Left + Right) * 0.5) - (TextWidth * 0.5)
@@ -216,6 +246,46 @@ function Visuals.PropESP2D(Prop)
 	-- TODO: ?
 end
 
+function Visuals.DebugInfo()
+	if not Config.HUD.DebugInfo.Enabled then return end
+
+	local Weapon = pkscript.LocalPlayer:GetActiveWeapon()
+
+	local WeaponName = pkscript.Util.CallOnValid("N/A", Weapon, "GetPrintName")
+	WeaponName = language.GetPhrase(WeaponName)
+
+	local EyeTrace = pkscript.LocalPlayer:GetEyeTrace()
+
+	local Markup = Format(
+		Config.HUD.DebugInfo.Markup,
+
+		Config.Fonts.DebugInfo,
+
+		pkscript.Util.AddressOf(pkscript.LocalPlayer),
+		pkscript.LocalPlayer:Health(),
+		pkscript.LocalPlayer:Armor(),
+		pkscript.LocalPlayer:GetVelocity():Length(),
+
+		pkscript.Util.AddressOf(Weapon),
+		WeaponName,
+		pkscript.Util.MarkupBool(pkscript.Util.CallOnValid(false, Weapon, "IsScripted")),
+
+		game.GetIPAddress(),
+		pkscript.LocalPlayer:Ping(),
+		math.Clamp(1 / engine.ServerFrameTime(), 0, pkscript.InverseTickInterval),
+		pkscript.InverseTickInterval,
+		1 / RealFrameTime(),
+		#Visuals.EntityCache,
+
+		EyeTrace.Entity,
+		EyeTrace.HitGroup,
+		EyeTrace.HitTexture,
+		EyeTrace.MatType
+	)
+
+	markup.Parse(Markup):Draw(10, 175)
+end
+
 function Visuals.ESP2D()
 	if #Visuals.CurrentEntities < 1 then return end -- Nothing!
 
@@ -232,6 +302,8 @@ function Visuals.ESP2D()
 				Visuals.PropESP2D(Entity)
 			end
 		end
+
+		Visuals.DebugInfo()
 	end
 	cam.End2D()
 end

@@ -59,6 +59,9 @@ function Menu.Build()
 	Weapon:AddDropdown("Material", pkscript.Visuals.Config.Viewmodel.Weapon, "Material", Materials)
 	Weapon:AddDropdown("Color", pkscript.Visuals.Config.Viewmodel.Weapon, "Color", Colors)
 
+	local HUD = Visuals:AddSubOption("HUD")
+	HUD:AddSubOption("Debug Info", pkscript.Visuals.Config.HUD.DebugInfo, "Enabled", TYPE_BOOL)
+
 	local World = Visuals:AddSubOption("World")
 	World:AddSubOption("Night Mode", pkscript.Visuals.Config.World, "Nightmode", TYPE_BOOL)
 

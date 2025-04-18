@@ -39,3 +39,39 @@ function pkscript.Util.RunTrace()
 
 	return pkscript.Util.TraceResult
 end
+
+function pkscript.Util.AddressOf(Object)
+	if isentity(Object) and not Object:IsValid() then
+		return "0x00000000"
+	end
+
+	return Format("0x%X", tonumber(string.match(Format("%p", Object), "0x(%x+)"), 16))
+end
+
+function pkscript.Util.CallOnValid(Default, Object, FunctionName, ...)
+	if not IsValid(Object) then
+		return Default
+	end
+
+	local Function = Object[FunctionName]
+
+	if not isfunction(Function) then
+		return Default
+	end
+
+	return Function(Object, ...)
+end
+
+function pkscript.Util.BoolToString(Bool)
+	return Bool and "Yes" or "No"
+end
+
+function pkscript.Util.MarkupBool(Bool)
+	local Color = Bool and pkscript.Colors.Green or pkscript.Colors.Red
+
+	return Format(
+		"<color=%s>%s</color>",
+		markup.Color(Color),
+		pkscript.Util.BoolToString(Bool)
+	)
+end
