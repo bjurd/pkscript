@@ -39,6 +39,7 @@ function Menu.Setup()
 
 	Instance:SetWidth(ScreenScale(100))
 	Instance:SetHeight(ScreenScaleH(250))
+	Instance:SetPos(10, 10)
 
 	Menu.Instance = Instance
 
