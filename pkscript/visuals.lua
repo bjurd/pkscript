@@ -299,10 +299,14 @@ function Visuals.ESP2D()
 
 	cam.Start2D() -- Fix PostDrawHUD sucking
 	do
-		surface.SetTextColor(255, 255, 255, 255)
-
 		for i = 1, #Visuals.CurrentEntities do
 			local Entity = Visuals.CurrentEntities[i]
+
+			if Entity:IsDormant() then
+				surface.SetTextColor(150, 150, 150, 255)
+			else
+				surface.SetTextColor(255, 255, 255, 255)
+			end
 
 			if Entity:IsPlayer() then -- TODO: This will need expanded if/when entity classes are expanded
 				Visuals.PlayerESP2D(Entity)
