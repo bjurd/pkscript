@@ -104,15 +104,21 @@ LocalPlayer:  <color=255,255,0,255>%s</color>
 Health:       %d
 Armor:        %d
 Velocity:     %.2f
+Tick Base:    %d
 
 Weapon:       <color=255,255,0,255>%s</color>
 Display Name: %s
 Is Lua:       %s
+Primary:      %s
+Secondary:    %s
 
 Server:       <color=0,150,255,255>%s</color>
 Ping:         %u ms
 Tick Rate:    %.1f / %.1f
 Frame Rate:   %.0f
+CurTime:      %.4f
+Network Time: %.4f
+Time Delta:   %.4f
 
 Observing:    %s
 Hitbox:       %d
@@ -259,6 +265,12 @@ function Visuals.DebugInfo()
 	local WeaponName = pkscript.Util.CallOnValid("N/A", Weapon, "GetPrintName")
 	WeaponName = language.GetPhrase(WeaponName)
 
+	-- Some weapons (toolgun) make empty sound when checking CanPrimary/SecondaryAttack :/
+	local NextPrimaryFire = pkscript.Util.CallOnValid(math.huge, Weapon, "GetNextPrimaryFire")
+	local NextSecondaryFire = pkscript.Util.CallOnValid(math.huge, Weapon, "GetNextSecondaryFire")
+
+	local ServerTime = pkscript.Util.GetServerTime()
+
 	local EyeTrace = pkscript.LocalPlayer:GetEyeTrace()
 
 	local Markup = Format(
@@ -273,16 +285,22 @@ function Visuals.DebugInfo()
 		pkscript.LocalPlayer:Health(),
 		pkscript.LocalPlayer:Armor(),
 		pkscript.LocalPlayer:GetVelocity():Length(),
+		pkscript.LocalPlayer:GetInternalVariable("m_nTickBase"),
 
 		pkscript.Util.AddressOf(Weapon),
 		WeaponName,
 		pkscript.Util.MarkupBool(pkscript.Util.CallOnValid(false, Weapon, "IsScripted")),
+		pkscript.Util.MarkupBool(NextPrimaryFire < ServerTime),
+		pkscript.Util.MarkupBool(NextSecondaryFire < ServerTime),
 
 		game.GetIPAddress(),
 		pkscript.LocalPlayer:Ping(),
 		math.Clamp(1 / engine.ServerFrameTime(), 0, pkscript.InverseTickInterval),
 		pkscript.InverseTickInterval,
 		1 / RealFrameTime(),
+		CurTime(),
+		ServerTime,
+		ServerTime - CurTime(),
 
 		EyeTrace.Entity,
 		EyeTrace.HitGroup,

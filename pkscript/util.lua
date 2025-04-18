@@ -79,3 +79,11 @@ end
 function pkscript.Util.ASCIIFilter(String)
 	return string.gsub(String, "[^\32-\126]", "?")
 end
+
+function pkscript.Util.TicksToTime(Ticks)
+	return Ticks * pkscript.TickInterval
+end
+
+function pkscript.Util.GetServerTime()
+	return pkscript.Util.TicksToTime(pkscript.LocalPlayer:GetInternalVariable("m_nTickBase"))
+end
