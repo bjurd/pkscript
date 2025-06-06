@@ -41,11 +41,13 @@ function pkscript.Util.RunTrace()
 end
 
 function pkscript.Util.AddressOf(Object)
+	local Address = string.sub(Format("%p", Object), 3)
+
 	if isentity(Object) and Object ~= game.GetWorld() and not Object:IsValid() then
-		return "0x00000000"
+		Address = string.gsub(Address, "%x", "0")
 	end
 
-	return Format("0x%X", tonumber(string.match(Format("%p", Object), "0x(%x+)"), 16))
+	return Format("0x%s", string.upper(Address))
 end
 
 function pkscript.Util.CallOnValid(Default, Object, FunctionName, ...)
