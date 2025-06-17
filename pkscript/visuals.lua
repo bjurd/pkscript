@@ -153,7 +153,8 @@ Config.HUD.Removals.Ammo = Config.HUD.Removals.Ammo or {}
 Config.HUD.Removals.Ammo.Enabled = pkscript.Util.ConfigDefault(Config.HUD.Removals.Ammo.Enabled, false)
 
 Config.HUD.Removals.Ammo.List = {
-	["CHudAmmo"] = true
+	["CHudAmmo"] = true,
+	["CHudSecondaryAmmo"] = true
 }
 
 Config.HUD.Removals.DamageIndicator = Config.HUD.Removals.DamageIndicator or {}
