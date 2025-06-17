@@ -243,11 +243,10 @@ do
 					local ArrowX = Cache.ScreenSetup.Center.x + (Direction.x * Radius)
 					local ArrowY = Cache.ScreenSetup.Center.y + (Direction.y * Radius)
 
-					Radius = Radius - 4 -- Ghetto ass outline
-					local OutlineX = Cache.ScreenSetup.Center.x + (Direction.x * Radius)
-					local OutlineY = Cache.ScreenSetup.Center.y + (Direction.y * Radius)
-
-					DrawOOFArrow(Direction, OutlineX, OutlineY, 40, 110, pkscript.Colors.Black)
+					DrawOOFArrow(Direction, ArrowX + 1, ArrowY + 1, 32, 100, pkscript.Colors.Black) -- Unoptimized outline
+					DrawOOFArrow(Direction, ArrowX + 1, ArrowY - 1, 32, 100, pkscript.Colors.Black)
+					DrawOOFArrow(Direction, ArrowX - 1, ArrowY + 1, 32, 100, pkscript.Colors.Black)
+					DrawOOFArrow(Direction, ArrowX - 1, ArrowY - 1, 32, 100, pkscript.Colors.Black)
 					DrawOOFArrow(Direction, ArrowX, ArrowY, 32, 100, ColorAlpha(pkscript.Colors[Config.PlayerESP.OOF.Color], 100)) -- EWWW ColorAlpha EWWWW
 
 					if Config.PlayerESP.OOF.NameTags then
