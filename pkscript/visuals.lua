@@ -230,6 +230,8 @@ do
 
 		if not Player:Alive() then return end
 
+		local Text, TextWidth, TextHeight
+
 		if not Player:IsDormant() then
 			if Config.PlayerESP.OOF.Enabled then
 				local Visible, Direction = pkscript.Util.PositionInView(Player:WorldSpaceCenter(), Cache.ViewSetup.ViewOrigin, Cache.ViewSetup.ViewAngles, Cache.ViewSetup.ViewFOV)
@@ -246,14 +248,20 @@ do
 
 					DrawOOFArrow(Direction, OutlineX, OutlineY, 40, 110, pkscript.Colors.Black)
 					DrawOOFArrow(Direction, ArrowX, ArrowY, 32, 100, ColorAlpha(pkscript.Colors[Config.PlayerESP.OOF.Color], 100)) -- EWWW ColorAlpha EWWWW
+
+					Text = Player:GetName()
+
+					if Config.PlayerESP.FilterNameTags then
+						Text = pkscript.Util.ASCIIFilter(Text)
+					end
+
+					draw.SimpleTextOutlined(Text, Config.Fonts.NameTags, ArrowX, ArrowY, surface.GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, pkscript.Colors.Black)
 				end
 			end
 		end
 
 		local Left, Right, Top, Bottom = Visuals.GetCorners(Player)
 		if Left ~= Left then return end
-
-		local Text, TextWidth, TextHeight
 
 		if Config.PlayerESP.NameTags then
 			surface.SetFont(Config.Fonts.NameTags)
@@ -268,7 +276,7 @@ do
 
 			local CenterX = ((Left + Right) * 0.5) - (TextWidth * 0.5)
 
-			draw.SimpleTextOutlined(Text, Config.Fonts.NameTags, CenterX, Top - TextHeight, surface.GetTextColor(), nil, nil, 1, color_black)
+			draw.SimpleTextOutlined(Text, Config.Fonts.NameTags, CenterX, Top - TextHeight, surface.GetTextColor(), nil, nil, 1, pkscript.Colors.Black)
 		end
 
 		if Config.PlayerESP.Weapons then
@@ -282,7 +290,7 @@ do
 
 				local CenterX = ((Left + Right) * 0.5) - (TextWidth * 0.5)
 
-				draw.SimpleTextOutlined(Text, Config.Fonts.Weapons, CenterX, Bottom + TextHeight, surface.GetTextColor(), nil, nil, 1, color_black)
+				draw.SimpleTextOutlined(Text, Config.Fonts.Weapons, CenterX, Bottom + TextHeight, surface.GetTextColor(), nil, nil, 1, pkscript.Colors.Black)
 
 				--surface.SetTextPos(CenterX, Bottom + TextHeight)
 				--surface.DrawText(Text)
