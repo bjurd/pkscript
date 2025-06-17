@@ -57,7 +57,7 @@ Config.PlayerESP.Bounds = pkscript.Util.ConfigDefault(Config.PlayerESP.Bounds, f
 
 Config.PlayerESP.OOF = Config.PlayerESP.OOF or {}
 Config.PlayerESP.OOF.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.OOF.Enabled, false)
-Config.PlayerESP.OOF.Color = pkscript.Util.ConfigDefault(Config.PlayerESP.OOF.Color, "Purple")
+Config.PlayerESP.OOF.Color = pkscript.Util.ConfigDefault(Config.PlayerESP.OOF.Color, "Red")
 
 Config.PlayerESP.ColoredModels = Config.PlayerESP.ColoredModels or {}
 Config.PlayerESP.ColoredModels.Material = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Material, "Flat")
