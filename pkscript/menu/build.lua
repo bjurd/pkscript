@@ -30,6 +30,7 @@ function Menu.Build()
 	local OOF = PlayerESP:AddSubOption("Out of FOV Indicators")
 	OOF:AddSubOption("Enabled", pkscript.Visuals.Config.PlayerESP.OOF, "Enabled", TYPE_BOOL)
 	OOF:AddDropdown("Color", pkscript.Visuals.Config.PlayerESP.OOF, "Color", Colors)
+	OOF:AddSubOption("Name Tags", pkscript.Visuals.Config.PlayerESP.OOF, "NameTags", TYPE_BOOL)
 
 	local ColoredModels = PlayerESP:AddSubOption("Colored Models")
 	ColoredModels:AddSubOption("Enabled", pkscript.Visuals.Config.PlayerESP.ColoredModels, "Enabled", TYPE_BOOL)

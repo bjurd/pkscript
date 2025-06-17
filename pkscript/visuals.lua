@@ -58,6 +58,7 @@ Config.PlayerESP.Bounds = pkscript.Util.ConfigDefault(Config.PlayerESP.Bounds, f
 Config.PlayerESP.OOF = Config.PlayerESP.OOF or {}
 Config.PlayerESP.OOF.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.OOF.Enabled, false)
 Config.PlayerESP.OOF.Color = pkscript.Util.ConfigDefault(Config.PlayerESP.OOF.Color, "Red")
+Config.PlayerESP.OOF.NameTags = pkscript.Util.ConfigDefault(Config.PlayerESP.OOF.NameTags, true)
 
 Config.PlayerESP.ColoredModels = Config.PlayerESP.ColoredModels or {}
 Config.PlayerESP.ColoredModels.Material = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Material, "Flat")
@@ -249,13 +250,15 @@ do
 					DrawOOFArrow(Direction, OutlineX, OutlineY, 40, 110, pkscript.Colors.Black)
 					DrawOOFArrow(Direction, ArrowX, ArrowY, 32, 100, ColorAlpha(pkscript.Colors[Config.PlayerESP.OOF.Color], 100)) -- EWWW ColorAlpha EWWWW
 
-					Text = Player:GetName()
+					if Config.PlayerESP.OOF.NameTags then
+						Text = Player:GetName()
 
-					if Config.PlayerESP.FilterNameTags then
-						Text = pkscript.Util.ASCIIFilter(Text)
+						if Config.PlayerESP.FilterNameTags then -- TODO: Might be a touch misleading that this acts based on a different section's config
+							Text = pkscript.Util.ASCIIFilter(Text)
+						end
+
+						draw.SimpleTextOutlined(Text, Config.Fonts.NameTags, ArrowX, ArrowY, surface.GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, pkscript.Colors.Black)
 					end
-
-					draw.SimpleTextOutlined(Text, Config.Fonts.NameTags, ArrowX, ArrowY, surface.GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, pkscript.Colors.Black)
 				end
 			end
 		end
