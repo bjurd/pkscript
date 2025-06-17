@@ -137,6 +137,40 @@ Material:     %s
 </font>
 ]]
 
+Config.HUD.Removals = Config.HUD.Removals or {}
+Config.HUD.Removals.Enabled = pkscript.Util.ConfigDefault(Config.HUD.Removals.Enabled, false)
+
+Config.HUD.Removals.Health = Config.HUD.Removals.Health or {}
+Config.HUD.Removals.Health.Enabled = pkscript.Util.ConfigDefault(Config.HUD.Removals.Health.Enabled, false)
+
+Config.HUD.Removals.Health.List = {
+	["CHudHealth"] = true,
+	["CHudBattery"] = true,
+	["CHudGeiger"] = true
+}
+
+Config.HUD.Removals.Ammo = Config.HUD.Removals.Ammo or {}
+Config.HUD.Removals.Ammo.Enabled = pkscript.Util.ConfigDefault(Config.HUD.Removals.Ammo.Enabled, false)
+
+Config.HUD.Removals.Ammo.List = {
+	["CHudAmmo"] = true
+}
+
+Config.HUD.Removals.DamageIndicator = Config.HUD.Removals.DamageIndicator or {}
+Config.HUD.Removals.DamageIndicator.Enabled = pkscript.Util.ConfigDefault(Config.HUD.Removals.DamageIndicator.Enabled, true)
+
+Config.HUD.Removals.DamageIndicator.List = {
+	["CHudDamageIndicator"] = true,
+	["CHudPoisonDamageIndicator"] = true
+}
+
+Config.HUD.Removals.Custom = Config.HUD.Removals.Custom or {}
+Config.HUD.Removals.Custom.Enabled = pkscript.Util.ConfigDefault(Config.HUD.Removals.Custom.Enabled, false)
+
+Config.HUD.Removals.Custom.List = {
+	["CHudGMod"] = true
+}
+
 -- World
 Config.World = Config.World or {}
 Config.World.Nightmode = pkscript.Util.ConfigDefault(Config.World.Nightmode, true)
@@ -719,6 +753,15 @@ do
 	end
 end
 
+function Visuals.HandleRemovals(Name)
+	if not Config.HUD.Removals.Enabled then return end
+
+	if Config.HUD.Removals.Health.Enabled and Config.HUD.Removals.Health.List[Name] then return false end
+	if Config.HUD.Removals.Ammo.Enabled and Config.HUD.Removals.Ammo.List[Name] then return false end
+	if Config.HUD.Removals.DamageIndicator.Enabled and Config.HUD.Removals.DamageIndicator.List[Name] then return false end
+	if Config.HUD.Removals.Custom.Enabled and Config.HUD.Removals.Custom.List[Name] then return false end
+end
+
 function Visuals.PrepareEntityCache()
 	Visuals.CurrentEntities = {}
 
@@ -771,6 +814,7 @@ pkscript.Hooks.Register("PreDrawPlayerHands", Visuals.PreDrawPlayerHands)
 pkscript.Hooks.Register("PostDrawPlayerHands", Visuals.PostDrawPlayerHands)
 pkscript.Hooks.Register("RenderScene", Visuals.Nightmode)
 pkscript.Hooks.Register("CalcView", Visuals.FOVChanger)
+pkscript.Hooks.Register("HUDShouldDraw", Visuals.HandleRemovals)
 pkscript.Hooks.Register("OnEntityCreated", Visuals.CacheEntity)
 pkscript.Hooks.Register("NetworkEntityCreated", Visuals.CacheEntity) -- Should be unnecessary, but doesn't hurt
 pkscript.Hooks.Register("EntityRemoved", Visuals.UnCacheEntity)

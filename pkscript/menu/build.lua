@@ -68,6 +68,13 @@ function Menu.Build()
 	local HUD = Visuals:AddSubOption("HUD")
 	HUD:AddSubOption("Debug Info", pkscript.Visuals.Config.HUD.DebugInfo, "Enabled", TYPE_BOOL)
 
+	local Removals = HUD:AddSubOption("Removals")
+	Removals:AddSubOption("Enabled", pkscript.Visuals.Config.HUD.Removals, "Enabled", TYPE_BOOL)
+	Removals:AddSubOption("Health", pkscript.Visuals.Config.HUD.Removals.Health, "Enabled", TYPE_BOOL)
+	Removals:AddSubOption("Ammo", pkscript.Visuals.Config.HUD.Removals.Ammo, "Enabled", TYPE_BOOL)
+	Removals:AddSubOption("Damage Indicators", pkscript.Visuals.Config.HUD.Removals.DamageIndicator, "Enabled", TYPE_BOOL)
+	Removals:AddSubOption("Custom", pkscript.Visuals.Config.HUD.Removals.Custom, "Enabled", TYPE_BOOL)
+
 	local World = Visuals:AddSubOption("World")
 	World:AddSubOption("Night Mode", pkscript.Visuals.Config.World, "Nightmode", TYPE_BOOL)
 
