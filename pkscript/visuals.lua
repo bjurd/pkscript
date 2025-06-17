@@ -103,7 +103,7 @@ Config.HUD.DebugInfo.Enabled = pkscript.Util.ConfigDefault(Config.HUD.DebugInfo.
 
 Config.HUD.DebugInfo.Markup = [[
 <font=%s>
-Frame Rate:   %.0f
+Frame Rate:   %.0f (%.0f)
 Frame Time:   %.4f
 Lua Memory:   %s
 Entity Cache: %u
@@ -359,63 +359,86 @@ function Visuals.PropESP2D(Prop)
 	-- TODO: ?
 end
 
-function Visuals.DebugInfo()
-	if not Config.HUD.DebugInfo.Enabled then return end
+do
+	local StdFrameRate = 0
+	local FrameRateTime = 0
+	local FrameRateAmount = 0
+	local FrameRateCounter = 0
 
-	local Weapon = pkscript.LocalPlayer:GetActiveWeapon()
+	function Visuals.DebugInfo()
+		if not Config.HUD.DebugInfo.Enabled then return end
 
-	local WeaponName = pkscript.Util.CallOnValid("N/A", Weapon, "GetPrintName")
-	WeaponName = language.GetPhrase(WeaponName)
+		local Weapon = pkscript.LocalPlayer:GetActiveWeapon()
 
-	-- Some weapons (toolgun) make empty sound when checking CanPrimary/SecondaryAttack :/
-	local NextPrimaryFire = pkscript.Util.CallOnValid(math.huge, Weapon, "GetNextPrimaryFire")
-	local NextSecondaryFire = pkscript.Util.CallOnValid(math.huge, Weapon, "GetNextSecondaryFire")
+		local WeaponName = pkscript.Util.CallOnValid("N/A", Weapon, "GetPrintName")
+		WeaponName = language.GetPhrase(WeaponName)
 
-	local ServerTime = pkscript.Util.GetServerTime()
-	local FrameTime = RealFrameTime()
+		-- Some weapons (toolgun) make empty sound when checking CanPrimary/SecondaryAttack :/
+		local NextPrimaryFire = pkscript.Util.CallOnValid(math.huge, Weapon, "GetNextPrimaryFire")
+		local NextSecondaryFire = pkscript.Util.CallOnValid(math.huge, Weapon, "GetNextSecondaryFire")
 
-	local EyeTrace = pkscript.LocalPlayer:GetEyeTrace()
+		local ServerTime = pkscript.Util.GetServerTime()
+		local FrameTime = RealFrameTime()
+		local FrameRate = 1 / FrameTime
+		local CurrentTime = CurTime()
 
-	local Markup = Format(
-		Config.HUD.DebugInfo.Markup,
+		FrameRateAmount = FrameRateAmount + 1
 
-		Config.Fonts.DebugInfo,
+		-- FrameRate that doesn't jump all over the place constantly so it's actually readable
+		if CurrentTime - FrameRateTime >= 1 then
+			StdFrameRate = FrameRateCounter / FrameRateAmount
 
-		1 / FrameTime,
-		FrameTime,
-		string.NiceSize(collectgarbage("count")),
-		#Visuals.EntityCache,
+			FrameRateTime = CurrentTime
+			FrameRateAmount = 0
+			FrameRateCounter = 0
+		end
 
-		pkscript.Util.AddressOf(pkscript.LocalPlayer),
-		pkscript.LocalPlayer:Health(),
-		pkscript.LocalPlayer:Armor(),
-		pkscript.LocalPlayer:GetVelocity():Length(),
-		pkscript.LocalPlayer:GetInternalVariable("m_nTickBase"),
+		FrameRateCounter = FrameRateCounter + FrameRate
 
-		pkscript.Util.AddressOf(Weapon),
-		WeaponName,
-		pkscript.Util.MarkupBool(pkscript.Util.CallOnValid(false, Weapon, "IsScripted")),
-		pkscript.Util.MarkupBool(NextPrimaryFire < ServerTime),
-		pkscript.Util.MarkupBool(NextSecondaryFire < ServerTime),
+		local EyeTrace = pkscript.LocalPlayer:GetEyeTrace()
 
-		game.GetIPAddress(),
-		pkscript.LocalPlayer:Ping(),
-		math.Clamp(1 / engine.ServerFrameTime(), 0, pkscript.InverseTickInterval),
-		pkscript.InverseTickInterval,
-		CurTime(),
-		ServerTime,
-		ServerTime - CurTime(),
-		game.GetTimeScale() * pkscript.ConVars.host_timescale:GetFloat(),
+		local Markup = Format(
+			Config.HUD.DebugInfo.Markup,
 
-		pkscript.Util.AddressOf(EyeTrace.Entity),
-		pkscript.Util.CallOnValid("N/A", EyeTrace.Entity, "GetClass"),
-		pkscript.Util.CallOnValid(0, EyeTrace.Entity, "EntIndex"),
-		EyeTrace.HitGroup,
-		EyeTrace.HitTexture,
-		EyeTrace.MatType
-	)
+			Config.Fonts.DebugInfo,
 
-	markup.Parse(Markup):Draw(10, 175)
+			FrameRate,
+			StdFrameRate,
+			FrameTime,
+			string.NiceSize(collectgarbage("count")),
+			#Visuals.EntityCache,
+
+			pkscript.Util.AddressOf(pkscript.LocalPlayer),
+			pkscript.LocalPlayer:Health(),
+			pkscript.LocalPlayer:Armor(),
+			pkscript.LocalPlayer:GetVelocity():Length(),
+			pkscript.LocalPlayer:GetInternalVariable("m_nTickBase"),
+
+			pkscript.Util.AddressOf(Weapon),
+			WeaponName,
+			pkscript.Util.MarkupBool(pkscript.Util.CallOnValid(false, Weapon, "IsScripted")),
+			pkscript.Util.MarkupBool(NextPrimaryFire < ServerTime),
+			pkscript.Util.MarkupBool(NextSecondaryFire < ServerTime),
+
+			game.GetIPAddress(),
+			pkscript.LocalPlayer:Ping(),
+			math.Clamp(1 / engine.ServerFrameTime(), 0, pkscript.InverseTickInterval),
+			pkscript.InverseTickInterval,
+			CurrentTime,
+			ServerTime,
+			ServerTime - CurrentTime,
+			game.GetTimeScale() * pkscript.ConVars.host_timescale:GetFloat(),
+
+			pkscript.Util.AddressOf(EyeTrace.Entity),
+			pkscript.Util.CallOnValid("N/A", EyeTrace.Entity, "GetClass"),
+			pkscript.Util.CallOnValid(0, EyeTrace.Entity, "EntIndex"),
+			EyeTrace.HitGroup,
+			EyeTrace.HitTexture,
+			EyeTrace.MatType
+		)
+
+		markup.Parse(Markup):Draw(10, 175)
+	end
 end
 
 function Visuals.ESP2D()
