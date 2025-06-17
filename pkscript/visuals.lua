@@ -49,6 +49,7 @@ Config.Materials["Jellyfish (Static)"] = CreateMaterial("pkscript_StaticJellyfis
 -- Players
 Config.PlayerESP = Config.PlayerESP or {}
 Config.PlayerESP.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.Enabled, true)
+Config.PlayerESP.IgnoreDormant = pkscript.Util.ConfigDefault(Config.PlayerESP.IgnoreDormant, false)
 Config.PlayerESP.NameTags = pkscript.Util.ConfigDefault(Config.PlayerESP.NameTags, true)
 Config.PlayerESP.FilterNameTags = pkscript.Util.ConfigDefault(Config.PlayerESP.FilterNameTags, true)
 Config.PlayerESP.Weapons = pkscript.Util.ConfigDefault(Config.PlayerESP.Weapons, false)
@@ -264,6 +265,7 @@ do
 		if not Config.PlayerESP.Enabled then return end
 		if Player == pkscript.LocalPlayer then return end -- TODO: LocalPlayer options ?
 
+		if Config.PlayerESP.IgnoreDormant and Player:IsDormant() then return end
 		if not Player:Alive() then return end
 
 		local Text, TextWidth, TextHeight

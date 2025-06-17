@@ -21,6 +21,7 @@ function Menu.Build()
 
 	local PlayerESP = Visuals:AddSubOption("Player ESP")
 	PlayerESP:AddSubOption("Enabled", pkscript.Visuals.Config.PlayerESP, "Enabled", TYPE_BOOL)
+	PlayerESP:AddSubOption("Ignore Dormant", pkscript.Visuals.Config.PlayerESP, "IgnoreDormant", TYPE_BOOL)
 	PlayerESP:AddSubOption("Name Tags", pkscript.Visuals.Config.PlayerESP, "NameTags", TYPE_BOOL)
 	PlayerESP:AddSubOption("Filter Name Tags", pkscript.Visuals.Config.PlayerESP, "FilterNameTags", TYPE_BOOL)
 	PlayerESP:AddSubOption("Weapons", pkscript.Visuals.Config.PlayerESP, "Weapons", TYPE_BOOL)
