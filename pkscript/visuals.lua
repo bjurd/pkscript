@@ -1,5 +1,6 @@
 pkscript.Visuals = pkscript.Visuals or {}
 local Visuals = pkscript.Visuals
+local Cache = pkscript.Cache
 
 Visuals.EntityCache = {} -- Force empty these
 Visuals.EntityCacheKeys = {}
@@ -53,6 +54,10 @@ Config.PlayerESP.FilterNameTags = pkscript.Util.ConfigDefault(Config.PlayerESP.F
 Config.PlayerESP.Weapons = pkscript.Util.ConfigDefault(Config.PlayerESP.Weapons, false)
 Config.PlayerESP.Health = pkscript.Util.ConfigDefault(Config.PlayerESP.Health, false)
 Config.PlayerESP.Bounds = pkscript.Util.ConfigDefault(Config.PlayerESP.Bounds, false)
+
+Config.PlayerESP.OOF = Config.PlayerESP.OOF or {}
+Config.PlayerESP.OOF.Enabled = pkscript.Util.ConfigDefault(Config.PlayerESP.OOF.Enabled, false)
+Config.PlayerESP.OOF.Color = pkscript.Util.ConfigDefault(Config.PlayerESP.OOF.Color, "Purple")
 
 Config.PlayerESP.ColoredModels = Config.PlayerESP.ColoredModels or {}
 Config.PlayerESP.ColoredModels.Material = pkscript.Util.ConfigDefault(Config.PlayerESP.ColoredModels.Material, "Flat")
@@ -193,68 +198,115 @@ end
 
 -- TODO: Localize stuff for ESP drawing
 
-function Visuals.PlayerESP2D(Player)
-	if not Config.PlayerESP.Enabled then return end
-	if Player == pkscript.LocalPlayer then return end -- TODO: LocalPlayer options ?
+do
+	-- TODO: This math is slightly wrong since it kind of uses 2D positioning meaning that if you're not on the same Z level it'll point up or down incorrectly
+	-- I think that's probably more of an issue with PositionInView, idk
+	local function DrawOOFArrow(Direction, X, Y, BaseWidth, BaseHeight, Color)
+		-- https://github.com/Facepunch/garrysmod/blob/master/garrysmod/lua/entities/widget_arrow.lua
+		Cache.Materials.Arrow = Cache.Materials.Arrow or Material("widgets/arrow.png")
 
-	if not Player:Alive() then return end
+		local ArrowAngle = math.deg(math.atan2(-Direction.y, Direction.x))
+		ArrowAngle = (ArrowAngle + 360) % 360 -- math.NormalizeAngle is -180 to 180 and makes it squish sometimes
 
-	local Left, Right, Top, Bottom = Visuals.GetCorners(Player)
-	if Left ~= Left then return end
+		local FlipArrow = (ArrowAngle > 315 or ArrowAngle <= 45) or (ArrowAngle > 135 and ArrowAngle <= 225) -- Terrible manual checks yay
+		local ArrowWidth, ArrowHeight
 
-	local Text, TextWidth, TextHeight
-
-	if Config.PlayerESP.NameTags then
-		surface.SetFont(Config.Fonts.NameTags)
-
-		Text = Player:GetName()
-
-		if Config.PlayerESP.FilterNameTags then
-			Text = pkscript.Util.ASCIIFilter(Text)
+		if math.abs(Direction.x) > math.abs(Direction.y) then
+			ArrowWidth = FlipArrow and BaseWidth or BaseHeight
+			ArrowHeight = FlipArrow and BaseHeight or BaseWidth
+		else
+			ArrowWidth = FlipArrow and BaseHeight or BaseWidth
+			ArrowHeight = FlipArrow and BaseWidth or BaseHeight
 		end
 
-		TextWidth, TextHeight = surface.GetTextSize(Text)
-
-		local CenterX = ((Left + Right) * 0.5) - (TextWidth * 0.5)
-
-		draw.SimpleTextOutlined(Text, Config.Fonts.NameTags, CenterX, Top - TextHeight, surface.GetTextColor(), nil, nil, 1, color_black)
+		surface.SetMaterial(Cache.Materials.Arrow)
+		surface.SetDrawColor(Color)
+		surface.DrawTexturedRectRotated(X, Y, ArrowWidth, ArrowHeight, ArrowAngle - 90) -- -90 because the sprite faces up
 	end
 
-	if Config.PlayerESP.Weapons then
-		local Weapon = Player:GetActiveWeapon()
+	function Visuals.PlayerESP2D(Player)
+		if not Config.PlayerESP.Enabled then return end
+		if Player == pkscript.LocalPlayer then return end -- TODO: LocalPlayer options ?
 
-		if IsValid(Weapon) and Weapon:IsWeapon() then -- Some addons are retarded :/
-			surface.SetFont(Config.Fonts.Weapons)
+		if not Player:Alive() then return end
 
-			Text = language.GetPhrase(Weapon:GetPrintName())
+		if not Player:IsDormant() then
+			if Config.PlayerESP.OOF.Enabled then
+				local Visible, Direction = pkscript.Util.PositionInView(Player:WorldSpaceCenter(), Cache.ViewSetup.ViewOrigin, Cache.ViewSetup.ViewAngles, Cache.ViewSetup.ViewFOV)
+
+				if not Visible then
+					local Radius = math.max(Cache.ScreenSetup.Width, Cache.ScreenSetup.Height) * 0.25 -- TODO: Better way of doing this
+
+					local ArrowX = Cache.ScreenSetup.Center.x + (Direction.x * Radius)
+					local ArrowY = Cache.ScreenSetup.Center.y + (Direction.y * Radius)
+
+					Radius = Radius - 4 -- Ghetto ass outline
+					local OutlineX = Cache.ScreenSetup.Center.x + (Direction.x * Radius)
+					local OutlineY = Cache.ScreenSetup.Center.y + (Direction.y * Radius)
+
+					DrawOOFArrow(Direction, OutlineX, OutlineY, 40, 110, pkscript.Colors.Black)
+					DrawOOFArrow(Direction, ArrowX, ArrowY, 32, 100, ColorAlpha(pkscript.Colors[Config.PlayerESP.OOF.Color], 100)) -- EWWW ColorAlpha EWWWW
+				end
+			end
+		end
+
+		local Left, Right, Top, Bottom = Visuals.GetCorners(Player)
+		if Left ~= Left then return end
+
+		local Text, TextWidth, TextHeight
+
+		if Config.PlayerESP.NameTags then
+			surface.SetFont(Config.Fonts.NameTags)
+
+			Text = Player:GetName()
+
+			if Config.PlayerESP.FilterNameTags then
+				Text = pkscript.Util.ASCIIFilter(Text)
+			end
+
 			TextWidth, TextHeight = surface.GetTextSize(Text)
 
 			local CenterX = ((Left + Right) * 0.5) - (TextWidth * 0.5)
 
-			draw.SimpleTextOutlined(Text, Config.Fonts.Weapons, CenterX, Bottom + TextHeight, surface.GetTextColor(), nil, nil, 1, color_black)
-
-			--surface.SetTextPos(CenterX, Bottom + TextHeight)
-			--surface.DrawText(Text)
+			draw.SimpleTextOutlined(Text, Config.Fonts.NameTags, CenterX, Top - TextHeight, surface.GetTextColor(), nil, nil, 1, color_black)
 		end
-	end
 
-	if Config.PlayerESP.Health then
-		local MinHealth = Player:Health()
-		local MaxHealth = Player:GetMaxHealth()
+		if Config.PlayerESP.Weapons then
+			local Weapon = Player:GetActiveWeapon()
 
-		local Percent = math.Clamp(MinHealth / MaxHealth, 0, 1)
+			if IsValid(Weapon) and Weapon:IsWeapon() then -- Some addons are retarded :/
+				surface.SetFont(Config.Fonts.Weapons)
 
-		local HealthColor = pkscript.Colors.Red:Lerp(pkscript.Colors.Green, Percent)
-		local HealthHeight = (Bottom - Top) * Percent
+				Text = language.GetPhrase(Weapon:GetPrintName())
+				TextWidth, TextHeight = surface.GetTextSize(Text)
 
-		surface.SetDrawColor(24, 24, 24, 255)
-		surface.DrawRect(Left - 8, Top, 4, Bottom - Top)
+				local CenterX = ((Left + Right) * 0.5) - (TextWidth * 0.5)
 
-		surface.SetDrawColor(HealthColor)
-		surface.DrawRect(Left - 8, Bottom - HealthHeight, 4, HealthHeight)
+				draw.SimpleTextOutlined(Text, Config.Fonts.Weapons, CenterX, Bottom + TextHeight, surface.GetTextColor(), nil, nil, 1, color_black)
 
-		surface.SetDrawColor(0, 0, 0, 255)
-		surface.DrawOutlinedRect(Left - 8, Top, 4, Bottom - Top)
+				--surface.SetTextPos(CenterX, Bottom + TextHeight)
+				--surface.DrawText(Text)
+			end
+		end
+
+		if Config.PlayerESP.Health then
+			local MinHealth = Player:Health()
+			local MaxHealth = Player:GetMaxHealth()
+
+			local Percent = math.Clamp(MinHealth / MaxHealth, 0, 1)
+
+			local HealthColor = pkscript.Colors.Red:Lerp(pkscript.Colors.Green, Percent)
+			local HealthHeight = (Bottom - Top) * Percent
+
+			surface.SetDrawColor(24, 24, 24, 255)
+			surface.DrawRect(Left - 8, Top, 4, Bottom - Top)
+
+			surface.SetDrawColor(HealthColor)
+			surface.DrawRect(Left - 8, Bottom - HealthHeight, 4, HealthHeight)
+
+			surface.SetDrawColor(0, 0, 0, 255)
+			surface.DrawOutlinedRect(Left - 8, Top, 4, Bottom - Top)
+		end
 	end
 end
 
@@ -562,14 +614,14 @@ end
 
 do -- Nightmode
 	local LastState = false
-	pkscript.GlobalCache.WorldMaterials = pkscript.GlobalCache.WorldMaterials or {}
+	Cache.Materials.World = Cache.Materials.World or {}
 
-	local function Cache()
-		if not table.IsEmpty(pkscript.GlobalCache.WorldMaterials) then
+	local function CacheWorld()
+		if not table.IsEmpty(Cache.Materials.World) then
 			return
 		end
 
-		local MaterialCache = pkscript.GlobalCache.WorldMaterials
+		local MaterialCache = Cache.Materials.World
 		local Materials = game.GetWorld():GetMaterials()
 
 		for i = 1, #Materials do
@@ -587,19 +639,19 @@ do -- Nightmode
 	end
 
 	local function Reset()
-		Cache()
+		CacheWorld()
 
-		for _, Data in next, pkscript.GlobalCache.WorldMaterials do
+		for _, Data in next, Cache.Materials.World do
 			Data.Material:SetVector("$color", Data.Color)
 		end
 	end
 
 	local function Setup()
-		Cache()
+		CacheWorld()
 
 		local Dark = Color(50, 50, 50, 255):ToVector()
 
-		for _, Data in next, pkscript.GlobalCache.WorldMaterials do
+		for _, Data in next, Cache.Materials.World do
 			Data.Material:SetVector("$color", Dark)
 		end
 	end

@@ -89,3 +89,27 @@ end
 function pkscript.Util.GetServerTime()
 	return pkscript.Util.TicksToTime(pkscript.LocalPlayer:GetInternalVariable("m_nTickBase"))
 end
+
+function pkscript.Util.PositionInView(Position, ViewOrigin, ViewAngles, ViewFOV)
+	if ViewFOV <= 0 then
+		ViewFOV = 360
+	end
+
+	local ViewForward = ViewAngles:Forward()
+	local ViewRight = ViewAngles:Right()
+	local ViewUp = ViewAngles:Up()
+
+	local Direction = Position - ViewOrigin
+	Direction:Normalize()
+
+	local Dot = ViewForward:Dot(Direction)
+	local Adjusted = math.cos(math.rad(ViewFOV) * 0.5)
+
+	local OffsetX = ViewRight:Dot(Direction)
+	local OffsetY = ViewUp:Dot(Direction)
+
+	local ScreenDir = Vector(OffsetX, -OffsetY, 0)
+	ScreenDir:Normalize()
+
+	return Dot >= Adjusted, ScreenDir
+end

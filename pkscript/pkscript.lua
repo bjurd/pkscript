@@ -8,6 +8,8 @@ include("pkscript/globals.lua")
 include("pkscript/util.lua")
 include("pkscript/hooks.lua")
 
+include("pkscript/cache.lua")
+
 include("pkscript/movement.lua")
 include("pkscript/visuals.lua")
 include("pkscript/miscellaneous.lua")

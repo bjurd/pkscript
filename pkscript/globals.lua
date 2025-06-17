@@ -4,6 +4,7 @@ pkscript.InverseTickInterval = 1 / pkscript.TickInterval
 
 pkscript.Colors = pkscript.Colors or {}
 pkscript.Colors.White = Color(255, 255, 255, 255)
+pkscript.Colors.Black = Color(0, 0, 0, 255)
 pkscript.Colors.Red = Color(255, 0, 0, 255)
 pkscript.Colors.Green = Color(0, 255, 0, 255)
 pkscript.Colors.Blue = Color(0, 0, 255, 255)
@@ -18,5 +19,3 @@ pkscript.ConVars.cl_sidespeed = GetConVar("cl_sidespeed")
 pkscript.ConVars.cl_forwardspeed = GetConVar("cl_forwardspeed")
 pkscript.ConVars.fov_desired = GetConVar("fov_desired")
 pkscript.ConVars.host_timescale = GetConVar("host_timescale")
-
-pkscript.GlobalCache = pkscript.GlobalCache or {}
