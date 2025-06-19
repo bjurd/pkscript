@@ -133,7 +133,7 @@ CurTime:      %.6f
 Network Time: %.6f
 Time Delta:   %.6f
 Time Scale:   %.2f
-Timing Out:   %s
+Timing Out:   %s (%s)
 Time Delay:   %.6f
 
 Look Entity:  <color=255,255,0,255>%s</color>
@@ -448,7 +448,8 @@ do
 			ServerTime,
 			ServerTime - CurrentTime,
 			game.GetTimeScale() * pkscript.ConVars.host_timescale:GetFloat(),
-			pkscript.Util.MarkupBool(TimingOut or ProbablyTimingOut),
+			pkscript.Util.MarkupBool(TimingOut),
+			pkscript.Util.MarkupBool(ProbablyTimingOut),
 			TimeoutPing,
 
 			pkscript.Util.AddressOf(EyeTrace.Entity),
