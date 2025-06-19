@@ -127,7 +127,7 @@ Class Name:   <color=0,255,200,255>%s</color>
 
 Server:       <color=0,150,255,255>%s</color>
 Name:         <color=0,255,200,255>%s</color>
-Ping:         %u ms
+Ping:         %u ms (%u ms)
 Tick Rate:    %.1f / %.1f
 CurTime:      %.6f
 Network Time: %.6f
@@ -442,6 +442,7 @@ do
 			game.GetIPAddress(),
 			GetHostName(),
 			Ping,
+			(ServerTime - CurrentTime) * 1000,
 			math.Clamp(1 / engine.ServerFrameTime(), 0, pkscript.InverseTickInterval),
 			pkscript.InverseTickInterval,
 			CurrentTime,
