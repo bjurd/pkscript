@@ -145,7 +145,7 @@ Material:     %d
 ]]
 
 Config.HUD.Removals = Config.HUD.Removals or {}
-Config.HUD.Removals.Enabled = pkscript.Util.ConfigDefault(Config.HUD.Removals.Enabled, false)
+Config.HUD.Removals.Enabled = pkscript.Util.ConfigDefault(Config.HUD.Removals.Enabled, true)
 
 Config.HUD.Removals.Health = Config.HUD.Removals.Health or {}
 Config.HUD.Removals.Health.Enabled = pkscript.Util.ConfigDefault(Config.HUD.Removals.Health.Enabled, false)
