@@ -122,6 +122,7 @@ Primary:      %s
 Secondary:    %s
 
 Server:       <color=0,150,255,255>%s</color>
+Name:         %s
 Ping:         %u ms
 Tick Rate:    %.1f / %.1f
 CurTime:      %.6f
@@ -423,6 +424,7 @@ do
 			pkscript.Util.MarkupBool(NextSecondaryFire < ServerTime),
 
 			game.GetIPAddress(),
+			GetHostName(),
 			pkscript.LocalPlayer:Ping(),
 			math.Clamp(1 / engine.ServerFrameTime(), 0, pkscript.InverseTickInterval),
 			pkscript.InverseTickInterval,
