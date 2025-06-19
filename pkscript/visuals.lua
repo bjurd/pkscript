@@ -124,9 +124,9 @@ Secondary:    %s
 Server:       <color=0,150,255,255>%s</color>
 Ping:         %u ms
 Tick Rate:    %.1f / %.1f
-CurTime:      %.4f
-Network Time: %.4f
-Time Delta:   %.4f
+CurTime:      %.6f
+Network Time: %.6f
+Time Delta:   %.6f
 Time Scale:   %.2f
 
 Look Entity:  <color=255,255,0,255>%s</color>
