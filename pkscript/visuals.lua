@@ -140,7 +140,7 @@ Class Name:   <color=0,255,200,255>%s</color>
 Index:        %d
 Hitbox:       %d
 Texture:      <color=0,255,200,255>%s</color>
-Material:     <color=0,255,200,255>%s</color>
+Material:     %d
 </font>
 ]]
 
