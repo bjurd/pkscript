@@ -134,6 +134,7 @@ Network Time: %.6f
 Time Delta:   %.6f
 Time Scale:   %.2f
 Timing Out:   %s
+Time Delay:   %.6f
 
 Look Entity:  <color=255,255,0,255>%s</color>
 Class Name:   <color=0,255,200,255>%s</color>
@@ -405,6 +406,10 @@ do
 
 		FrameRateCounter = FrameRateCounter + FrameRate
 
+		local Ping = pkscript.LocalPlayer:Ping()
+		local TimingOut, TimeoutPing = GetTimeoutInfo()
+		local ProbablyTimingOut = TimeoutPing > Ping / 1000
+
 		local EyeTrace = pkscript.LocalPlayer:GetEyeTrace()
 
 		local Markup = Format(
@@ -436,14 +441,15 @@ do
 
 			game.GetIPAddress(),
 			GetHostName(),
-			pkscript.LocalPlayer:Ping(),
+			Ping,
 			math.Clamp(1 / engine.ServerFrameTime(), 0, pkscript.InverseTickInterval),
 			pkscript.InverseTickInterval,
 			CurrentTime,
 			ServerTime,
 			ServerTime - CurrentTime,
 			game.GetTimeScale() * pkscript.ConVars.host_timescale:GetFloat(),
-			pkscript.Util.MarkupBool(GetTimeoutInfo()),
+			pkscript.Util.MarkupBool(TimingOut or ProbablyTimingOut),
+			TimeoutPing,
 
 			pkscript.Util.AddressOf(EyeTrace.Entity),
 			pkscript.Util.CallOnValid("N/A", EyeTrace.Entity, "GetClass"),
