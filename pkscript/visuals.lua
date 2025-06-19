@@ -442,7 +442,7 @@ do
 			game.GetIPAddress(),
 			GetHostName(),
 			Ping,
-			(ServerTime - CurrentTime) * 1000,
+			math.abs(ServerTime - CurrentTime) * 1000,
 			math.Clamp(1 / engine.ServerFrameTime(), 0, pkscript.InverseTickInterval),
 			pkscript.InverseTickInterval,
 			CurrentTime,
