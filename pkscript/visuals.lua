@@ -122,6 +122,9 @@ Is Lua:       %s
 Primary:      %s
 Secondary:    %s
 
+Vehicle:      <color=255,255,0,255>%s</color>
+Class Name:   <color=0,255,200,255>%s</color>
+
 Server:       <color=0,150,255,255>%s</color>
 Name:         <color=0,255,200,255>%s</color>
 Ping:         %u ms
@@ -378,6 +381,8 @@ do
 		local WeaponName = pkscript.Util.CallOnValid("N/A", Weapon, "GetPrintName")
 		WeaponName = language.GetPhrase(WeaponName)
 
+		local Vehicle = pkscript.LocalPlayer:GetVehicle()
+
 		-- Some weapons (toolgun) make empty sound when checking CanPrimary/SecondaryAttack :/
 		local NextPrimaryFire = pkscript.Util.CallOnValid(math.huge, Weapon, "GetNextPrimaryFire")
 		local NextSecondaryFire = pkscript.Util.CallOnValid(math.huge, Weapon, "GetNextSecondaryFire")
@@ -425,6 +430,9 @@ do
 			pkscript.Util.MarkupBool(pkscript.Util.CallOnValid(false, Weapon, "IsScripted")),
 			pkscript.Util.MarkupBool(NextPrimaryFire < ServerTime),
 			pkscript.Util.MarkupBool(NextSecondaryFire < ServerTime),
+
+			pkscript.Util.AddressOf(Vehicle),
+			pkscript.Util.CallOnValid("N/A", Vehicle, "GetClass"),
 
 			game.GetIPAddress(),
 			GetHostName(),
