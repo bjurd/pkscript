@@ -19,3 +19,16 @@ pkscript.ConVars.cl_sidespeed = GetConVar("cl_sidespeed")
 pkscript.ConVars.cl_forwardspeed = GetConVar("cl_forwardspeed")
 pkscript.ConVars.fov_desired = GetConVar("fov_desired")
 pkscript.ConVars.host_timescale = GetConVar("host_timescale")
+
+pkscript.MoveTypes = pkscript.MoveTypes or {}
+pkscript.MoveTypes[MOVETYPE_NONE] = "None"
+pkscript.MoveTypes[MOVETYPE_ISOMETRIC] = "Isometric"
+pkscript.MoveTypes[MOVETYPE_WALK] = "Walk"
+pkscript.MoveTypes[MOVETYPE_STEP] = "Step"
+pkscript.MoveTypes[MOVETYPE_FLY] = "Fly"
+pkscript.MoveTypes[MOVETYPE_FLYGRAVITY] = "FlyGrav"
+pkscript.MoveTypes[MOVETYPE_PUSH] = "Push"
+pkscript.MoveTypes[MOVETYPE_NOCLIP] = "Noclip"
+pkscript.MoveTypes[MOVETYPE_LADDER] = "Ladder"
+pkscript.MoveTypes[MOVETYPE_OBSERVER] = "Spectator"
+pkscript.MoveTypes[MOVETYPE_CUSTOM] = "Custom"

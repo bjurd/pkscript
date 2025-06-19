@@ -114,28 +114,30 @@ Health:       %d
 Armor:        %d
 Velocity:     %.2f
 Tick Base:    %d
+Move Type:    <color=0,255,200,255>%s</color>
 
 Weapon:       <color=255,255,0,255>%s</color>
-Display Name: %s
+Display Name: <color=0,255,200,255>%s</color>
 Is Lua:       %s
 Primary:      %s
 Secondary:    %s
 
 Server:       <color=0,150,255,255>%s</color>
-Name:         %s
+Name:         <color=0,255,200,255>%s</color>
 Ping:         %u ms
 Tick Rate:    %.1f / %.1f
 CurTime:      %.6f
 Network Time: %.6f
 Time Delta:   %.6f
 Time Scale:   %.2f
+Timing Out:   %s
 
 Look Entity:  <color=255,255,0,255>%s</color>
-Class Name:   %s
+Class Name:   <color=0,255,200,255>%s</color>
 Index:        %d
 Hitbox:       %d
-Texture:      %s
-Material:     %s
+Texture:      <color=0,255,200,255>%s</color>
+Material:     <color=0,255,200,255>%s</color>
 </font>
 ]]
 
@@ -416,6 +418,7 @@ do
 			pkscript.LocalPlayer:Armor(),
 			pkscript.LocalPlayer:GetVelocity():Length(),
 			pkscript.LocalPlayer:GetInternalVariable("m_nTickBase"),
+			pkscript.MoveTypes[pkscript.LocalPlayer:GetMoveType()] or "Unknown",
 
 			pkscript.Util.AddressOf(Weapon),
 			WeaponName,
@@ -432,6 +435,7 @@ do
 			ServerTime,
 			ServerTime - CurrentTime,
 			game.GetTimeScale() * pkscript.ConVars.host_timescale:GetFloat(),
+			pkscript.Util.MarkupBool(GetTimeoutInfo()),
 
 			pkscript.Util.AddressOf(EyeTrace.Entity),
 			pkscript.Util.CallOnValid("N/A", EyeTrace.Entity, "GetClass"),
