@@ -392,6 +392,7 @@ do
 		local FrameTime = RealFrameTime()
 		local FrameRate = 1 / FrameTime
 		local CurrentTime = CurTime()
+		local TimeDelta = math.abs(ServerTime - CurrentTime)
 
 		FrameRateAmount = FrameRateAmount + 1
 
@@ -442,12 +443,12 @@ do
 			game.GetIPAddress(),
 			GetHostName(),
 			Ping,
-			math.abs(ServerTime - CurrentTime) * 1000,
+			TimeDelta * 1000,
 			math.Clamp(1 / engine.ServerFrameTime(), 0, pkscript.InverseTickInterval),
 			pkscript.InverseTickInterval,
 			CurrentTime,
 			ServerTime,
-			ServerTime - CurrentTime,
+			TimeDelta,
 			game.GetTimeScale() * pkscript.ConVars.host_timescale:GetFloat(),
 			pkscript.Util.MarkupBool(TimingOut),
 			pkscript.Util.MarkupBool(ProbablyTimingOut),
