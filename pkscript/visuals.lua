@@ -140,6 +140,7 @@ Look Entity:  <color=255,255,0,255>%s</color>
 Class Name:   <color=0,255,200,255>%s</color>
 Index:        %d
 Hitbox:       %d
+Hitgroup:     %d
 Texture:      <color=0,255,200,255>%s</color>
 Material:     %d
 </font>
@@ -457,8 +458,9 @@ do
 			pkscript.Util.AddressOf(EyeTrace.Entity),
 			pkscript.Util.CallOnValid("N/A", EyeTrace.Entity, "GetClass"),
 			pkscript.Util.CallOnValid(0, EyeTrace.Entity, "EntIndex"),
-			EyeTrace.HitGroup,
-			EyeTrace.HitTexture,
+			EyeTrace.HitBox or -1,
+			EyeTrace.HitGroup or -1,
+			EyeTrace.HitTexture or "N/A",
 			EyeTrace.MatType or 0 -- The wiki says this defaults to 0, it's wrong
 		)
 
