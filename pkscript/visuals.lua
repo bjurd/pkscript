@@ -459,7 +459,7 @@ do
 			pkscript.Util.CallOnValid(0, EyeTrace.Entity, "EntIndex"),
 			EyeTrace.HitGroup,
 			EyeTrace.HitTexture,
-			EyeTrace.MatType
+			EyeTrace.MatType or 0 -- The wiki says this defaults to 0, it's wrong
 		)
 
 		markup.Parse(Markup):Draw(10, 175)
