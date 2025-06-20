@@ -61,7 +61,13 @@ function pkscript.Util.CallOnValid(Default, Object, FunctionName, ...)
 		return Default
 	end
 
-	return Function(Object, ...)
+	local Result = Function(Object, ...)
+
+	if Result == nil then
+		return Default
+	else
+		return Result
+	end
 end
 
 function pkscript.Util.BoolToString(Bool)
