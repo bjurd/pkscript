@@ -142,6 +142,7 @@ Index:        %d
 Hitbox:       %d
 Hitgroup:     %d
 Texture:      <color=0,255,200,255>%s</color>
+Model:        <color=0,255,200,255>%s</color>
 Material:     %d
 </font>
 ]]
@@ -461,6 +462,7 @@ do
 			EyeTrace.HitBox or -1,
 			EyeTrace.HitGroup or -1,
 			EyeTrace.HitTexture or "N/A",
+			pkscript.Util.CallOnValid("N/A", EyeTrace.Entity, "GetModel"),
 			EyeTrace.MatType or 0 -- The wiki says this defaults to 0, it's wrong
 		)
 
