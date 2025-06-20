@@ -16,7 +16,7 @@ local Config = Visuals.Config
 
 Config.Fonts = Config.Fonts or {} -- TODO: No idea how to do this in a menu controlled by arrow keys
 Config.Fonts.NameTags = pkscript.Util.ConfigDefault(Config.Fonts.NameTags, "TargetIDSmall")
-Config.Fonts.Weapons = pkscript.Util.ConfigDefault(Config.Fonts.Weapons, "DefaultVerySmall")
+Config.Fonts.Weapons = pkscript.Util.ConfigDefault(Config.Fonts.Weapons, "DebugOverlay")
 Config.Fonts.DebugInfo = pkscript.Util.ConfigDefault(Config.Fonts.DebugInfo, "DebugOverlay")
 
 Config.Materials = Config.Materials or {}
